@@ -1,7 +1,15 @@
+"use client";
+
 import { Grid2, Box, Button } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Splash() {
+  const router = useRouter();
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
   return (
     <>
       <Grid2
@@ -16,8 +24,8 @@ export default function Splash() {
       >
         <Grid2
           size={{
-            xs: 12,
-            sm: 12,
+            xs: 3,
+            sm: 6,
             md: 12,
           }}
           sx={{
@@ -52,6 +60,7 @@ export default function Splash() {
               <h4>Unleash the love and find your perfect match</h4>
               <Button
                 variant="contained"
+                onClick={handleLogin}
                 sx={{
                   backgroundColor: "#2d2d2d",
                   marginTop: 2,

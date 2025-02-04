@@ -1,13 +1,11 @@
 import { Box, Grid2 } from "@mui/material";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import XIcon from "@mui/icons-material/X";
+
 export default function Footer() {
   return (
     <>
       <Box
         sx={{
-          backgroundColor: "#2d2d2d",
+          backgroundColor: "#111111",
           color: "white",
           padding: "2rem 0",
           textAlign: "center",
@@ -16,7 +14,7 @@ export default function Footer() {
         <Grid2
           container
           sx={{
-            maxWidth: "1200px",
+            width: "100vw",
             margin: "0 auto",
             padding: "0 2rem",
             boxSizing: "border-box",
@@ -40,14 +38,6 @@ export default function Footer() {
                 border: "none",
               }}
             />
-            <ul>
-              <ul>Follow Us On Social Media</ul>
-            </ul>
-            <Grid2 container justifyContent="center" columnSpacing={2}>
-              <InstagramIcon sx={{ cursor: "pointer" }} />
-              <FacebookIcon sx={{ cursor: "pointer" }} />
-              <XIcon sx={{ cursor: "pointer" }} />
-            </Grid2>
           </Grid2>
 
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }} sx={{ mb: 2 }}>
@@ -61,7 +51,7 @@ export default function Footer() {
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }} sx={{ mb: 2 }}>
             <h3>Join Our Community</h3>
             <ul style={{ padding: "1rem" }}>
-              <ul>Dog Care Tips</ul>
+              <ul>Doggy Care Tips</ul>
             </ul>
           </Grid2>
 

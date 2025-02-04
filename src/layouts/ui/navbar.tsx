@@ -1,6 +1,16 @@
+"use client";
+
 import { Box, Grid2 } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
+  const handleLogin = () => {
+    router.push("/login");
+  };
+  const handleHome = () => {
+    router.push("/");
+  };
   return (
     <>
       <Grid2
@@ -10,7 +20,7 @@ export default function Navbar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: "#2d2d2d",
+          backgroundColor: "#111111",
           padding: "0 2rem",
           boxSizing: "border-box",
         }}
@@ -26,7 +36,11 @@ export default function Navbar() {
         >
           <Grid2 size="auto">
             <Box>
-              <Box style={{ color: "white" }}>PawsomeMatch</Box>
+              <Box style={{ color: "white" }}>
+                <h1 onClick={handleHome} style={{ cursor: "pointer" }}>
+                  PawsomeMatch
+                </h1>
+              </Box>
             </Box>
           </Grid2>
           <Grid2
@@ -44,7 +58,12 @@ export default function Navbar() {
               Contact
             </ul>
             <ul style={{ color: "white", cursor: "pointer" }}>about</ul>
-            <ul style={{ color: "white", cursor: "pointer" }}>Sign in</ul>
+            <ul
+              style={{ color: "white", cursor: "pointer" }}
+              onClick={handleLogin}
+            >
+              Sign in
+            </ul>
           </Grid2>
         </Grid2>
       </Grid2>
