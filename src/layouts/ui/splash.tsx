@@ -75,6 +75,7 @@ export default function Splash() {
                   Sign Up
                 </Button>
               </Link>
+
               <Box
                 sx={{
                   marginTop: 3,
