@@ -2,6 +2,7 @@
 
 import { Box, Grid2 } from "@mui/material";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Navbar() {
   const router = useRouter();
@@ -57,13 +58,15 @@ export default function Navbar() {
             >
               Contact
             </ul>
-            <ul style={{ color: "white", cursor: "pointer" }}>about</ul>
-            <ul
-              style={{ color: "white", cursor: "pointer" }}
-              onClick={handleLogin}
-            >
-              Sign in
-            </ul>
+            <ul style={{ color: "white", cursor: "pointer" }}>About</ul>
+            <Link href="/login?mode=login">
+              <ul
+                style={{ color: "white", cursor: "pointer" }}
+                onClick={handleLogin}
+              >
+                Login
+              </ul>
+            </Link>
           </Grid2>
         </Grid2>
       </Grid2>

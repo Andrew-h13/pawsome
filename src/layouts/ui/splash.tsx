@@ -3,6 +3,7 @@
 import { Grid2, Box, Button } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Splash() {
   const router = useRouter();
@@ -58,20 +59,22 @@ export default function Splash() {
               }}
             >
               <h4>Unleash the love and find your perfect match</h4>
-              <Button
-                variant="contained"
-                onClick={handleLogin}
-                sx={{
-                  backgroundColor: "#2d2d2d",
-                  marginTop: 2,
-                  padding: "12px 24px",
-                  fontSize: "1.1rem",
-                  textTransform: "none",
-                  borderRadius: "20px",
-                }}
-              >
-                Sign Up
-              </Button>
+              <Link href="/login?mode=signup">
+                <Button
+                  variant="contained"
+                  onClick={handleLogin}
+                  sx={{
+                    backgroundColor: "#2d2d2d",
+                    marginTop: 2,
+                    padding: "12px 24px",
+                    fontSize: "1.1rem",
+                    textTransform: "none",
+                    borderRadius: "20px",
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Link>
               <Box
                 sx={{
                   marginTop: 3,

@@ -5,11 +5,18 @@ import { motion } from "framer-motion";
 import Navbar from "@/layouts/ui/navbar";
 import Footer from "@/layouts/ui/footer";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Login() {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
+  const [isSignUp, setIsSignUp] = useState(mode === "signup");
+
+  useEffect(() => {
+    setIsSignUp(mode === "signup");
+  }, [mode]);
 
   return (
     <>
@@ -57,9 +64,7 @@ export default function Login() {
               }}
             >
               <Image
-                src={
-                  isSignUp ? "/assets/registerDog.jpg" : "/assets/logindog.jpg"
-                }
+                src={"/assets/logindog.jpg"}
                 alt="hero"
                 width={500}
                 height={605}

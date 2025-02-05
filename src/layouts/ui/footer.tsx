@@ -1,4 +1,5 @@
 import { Box, Grid2 } from "@mui/material";
+import Link from "next/link";
 
 export default function Footer() {
   return (
