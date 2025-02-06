@@ -2,7 +2,7 @@
 
 import { Box, Grid2 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { logoutUser } from "@/utils/api";
 
 export default function Navbar() {
@@ -14,14 +14,10 @@ export default function Navbar() {
     router.push("/");
   };
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsLoggedIn(true);
     } else {
-      setIsLoggedIn(false);
     }
   }, []);
 
@@ -30,8 +26,6 @@ export default function Navbar() {
 
     if (success) {
       localStorage.removeItem("token");
-
-      setIsLoggedIn(false);
 
       router.push("/login");
     } else {
