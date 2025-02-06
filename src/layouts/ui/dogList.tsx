@@ -9,9 +9,11 @@ import {
   CardContent,
   Typography,
   Button,
+  Fab,
 } from "@mui/material";
 import { Dog } from "@/models/types";
 import { getDogs, searchDog } from "@/utils/api";
+import PetsIcon from "@mui/icons-material/Pets";
 
 export default function DogList() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -116,24 +118,71 @@ export default function DogList() {
                   size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
                   key={dog.id || index}
                 >
-                  <Card sx={{ backgroundColor: "#333", color: "#fff" }}>
+                  <Card
+                    sx={{
+                      backgroundColor: "#333",
+                      color: "#fff",
+                      borderRadius: "16px",
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
+                      overflow: "hidden",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                        boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.4)",
+                      },
+                    }}
+                  >
                     <CardMedia
                       component="img"
                       height="200"
                       image={dog.img}
                       alt={dog.name}
-                      sx={{ objectFit: "cover" }}
+                      sx={{
+                        objectFit: "cover",
+                        borderBottom: "2px solid #FF4081",
+                      }}
                     />
                     <CardContent>
-                      <Typography variant="h6">{dog.name}</Typography>
-                      <Typography variant="body2">
-                        Breed: {dog.breed}
+                      <Box
+                        sx={{
+                          backgroundColor: "#FF4081",
+                          color: "#fff",
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginLeft: "auto",
+                          marginBottom: "1rem",
+                          cursor: "pointer",
+                          "&:hover": {
+                            backgroundColor: "#e0336b",
+                          },
+                        }}
+                      >
+                        <PetsIcon fontSize="small" />
+                      </Box>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}
+                      >
+                        {dog.name}
                       </Typography>
-                      <Typography variant="body2">
-                        Age: {dog.age} years
+                      <Typography
+                        variant="body2"
+                        sx={{ marginBottom: "0.5rem" }}
+                      >
+                        {dog.breed}
                       </Typography>
-                      <Typography variant="body2">
-                        Zip Code: {dog.zip_code}
+                      <Typography
+                        variant="body2"
+                        sx={{ marginBottom: "0.5rem", fontSize: "0.9rem" }}
+                      >
+                        {dog.age} years old
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: "0.9rem" }}>
+                        Location: {dog.zip_code}
                       </Typography>
                     </CardContent>
                   </Card>

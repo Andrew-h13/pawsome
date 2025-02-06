@@ -36,3 +36,31 @@ export const fetchDogs = async (
     return null;
   }
 };
+
+//   const [dogs, setDogs] = useState<Dog[]>([]);
+//   const [loading, setLoading] = useState(false);
+//   const [from, setFrom] = useState<string | undefined>(undefined);
+//   const [next, setNext] = useState<string | undefined>(undefined);
+//   const [prev, setPrev] = useState<string | undefined>(undefined);
+//   const dogsPerPage = 24;
+
+// useEffect(() => {
+//     const fetchDogs = async () => {
+//       setLoading(true);
+//       const data = await searchDog(
+//         [],
+//         [],
+//         undefined,
+//         undefined,
+//         from,
+//         dogsPerPage,
+//         { field: "name", direction: "asc" }
+//       );
+
+//       setDogs(data.resultIds || []);
+//       setNext(data.next || null);
+//       setPrev(data.prev || null);
+//       setLoading(false);
+//     };
+//     fetchDogs();
+//   }, [from]);

@@ -1,7 +1,15 @@
+"use client";
 import { Box, Grid2, Input } from "@mui/material";
 import PetsIcon from "@mui/icons-material/Pets";
+// import { useState } from "react";
 
 export default function Search() {
+  // const [ageRange, setAgeRange] = useState([0, 15]);
+
+  // const handleSliderChange = (event, newValue) => {
+  //   setAgeRange(newValue);
+  // };
+
   return (
     <>
       <Box
@@ -48,14 +56,24 @@ export default function Search() {
           </Box>
         </Grid2>
       </Box>
+
       <Box
         sx={{
           display: "flex",
           width: "100vw",
-          height: "grow",
+          height: "auto",
         }}
       >
-        <Grid2>
+        <Grid2
+          container
+          rowSpacing={2}
+          columnSpacing={2}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -64,7 +82,7 @@ export default function Search() {
               backgroundColor: "#2d2d2d",
               borderRadius: "25px",
               padding: "0.5rem 1rem",
-              width: "500px",
+              width: "125px",
               height: "3rem",
               marginTop: "25px",
             }}
@@ -87,6 +105,28 @@ export default function Search() {
               }}
             />
           </Box>
+
+          {/* <Box
+            sx={{
+              width: "150px",
+              marginTop: "25px",
+            }}
+          >
+            <Slider
+              getAriaLabel={() => "Age range"}
+              value={ageRange}
+              min={0}
+              max={15}
+              valueLabelDisplay="auto"
+              valueLabelFormat={(value) => `${value}`}
+              step={1}
+              onChange={handleSliderChange}
+            />
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <span>{ageRange[0]} </span>
+              <span>{ageRange[1]} </span>
+            </Box> */}
+          {/* </Box> */}
         </Grid2>
       </Box>
     </>
