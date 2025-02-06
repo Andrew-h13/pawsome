@@ -2,7 +2,8 @@
 
 import { Box, Grid2 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { logoutUser } from "@/utils/api";
 
 export default function Navbar() {
   const router = useRouter();
@@ -12,6 +13,32 @@ export default function Navbar() {
   const handleHome = () => {
     router.push("/");
   };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    const success = await logoutUser();
+
+    if (success) {
+      localStorage.removeItem("token");
+
+      setIsLoggedIn(false);
+
+      router.push("/login");
+    } else {
+      console.log("Logout failed");
+    }
+  };
+
   return (
     <>
       <Grid2
@@ -59,14 +86,22 @@ export default function Navbar() {
               Contact
             </ul>
             <ul style={{ color: "white", cursor: "pointer" }}>About</ul>
-            <Link href="/login?mode=login">
+
+            {isLoggedIn ? (
               <ul
                 style={{ color: "white", cursor: "pointer" }}
                 onClick={handleLogin}
               >
                 Login
               </ul>
-            </Link>
+            ) : (
+              <ul
+                style={{ color: "white", cursor: "pointer" }}
+                onClick={handleLogout}
+              >
+                Log out
+              </ul>
+            )}
           </Grid2>
         </Grid2>
       </Grid2>

@@ -1,8 +1,8 @@
 import Navbar from "@/layouts/ui/navbar";
 import Splash from "@/layouts/ui/splash";
 import Footer from "@/layouts/ui/footer";
-import Search from "@/layouts/ui/searchSection";
 import { Box } from "@mui/material";
+import DogList from "@/layouts/ui/dogList";
 export default function Home() {
   return (
     <>
@@ -15,7 +15,7 @@ export default function Home() {
       >
         <Navbar />
         <Splash />
-        <Search />
+        <DogList />
         <Box sx={{ flex: 1 }} /> <Footer />
       </Box>
     </>

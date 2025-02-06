@@ -11,6 +11,8 @@ export const loginUser = async (name: string, email: string) => {
 
     if (!res.ok) throw new Error("Login Failed");
     console.log("Login successful!");
+    const data = await res.json();
+    localStorage.setItem("session_token", data.token);
     return true;
   } catch (error) {
     console.log("Error logging in", error);
@@ -35,7 +37,7 @@ export const logoutUser = async () => {
   }
 };
 
-export const fetchBreeds = async () => {
+export const getBreeds = async () => {
   try {
     const res = await fetch(`${BASE_URL}/dogs/breeds`);
     if (!res.ok) throw new Error("Failed to fetch breeds");
@@ -50,7 +52,10 @@ export const searchDog = async (
   breeds: string[] = [],
   zipCodes: string[] = [],
   ageMin?: number,
-  ageMax?: number
+  ageMax?: number,
+  from?: string,
+  size: number = 24,
+  sort?: { field: "breed" | "name" | "age"; direction: "asc" | "desc" }
 ) => {
   const queryParams = new URLSearchParams();
 
@@ -59,12 +64,18 @@ export const searchDog = async (
     queryParams.append("zipCodes", JSON.stringify(zipCodes));
   if (ageMin) queryParams.append("ageMin", ageMin.toString());
   if (ageMax) queryParams.append("ageMax", ageMax.toString());
+  if (from) queryParams.append("from", from);
+  queryParams.append("size", size.toString());
+  if (sort) {
+    queryParams.append("sort", `${sort.field}:${sort.direction}`);
+  }
 
   const url = `${BASE_URL}/dogs/search?${queryParams.toString()}`;
 
   try {
     const res = await fetch(url, {
       method: "GET",
+      credentials: "include",
     });
     if (!res.ok) {
       const errorText = await res.text();
@@ -74,6 +85,28 @@ export const searchDog = async (
     return data;
   } catch (error) {
     console.error("Error searching for dogs", error);
-    return [];
+    return { resultIds: [], total: 0, next: null, prev: null };
+  }
+};
+
+export const getDogs = async (dogIds: string[]) => {
+  try {
+    const res = await fetch(`${BASE_URL}/dogs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dogIds),
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch dogs");
+
+    const data = await res.json();
+    console.log("Dogs fetched successfully!", data);
+    return data;
+  } catch (error) {
+    console.log("Error fetching dogs", error);
+    return null;
   }
 };

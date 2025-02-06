@@ -4,12 +4,24 @@ import { Grid2, Box, Button } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Splash() {
   const router = useRouter();
   const handleLogin = () => {
     router.push("/login");
   };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   return (
     <>
@@ -59,22 +71,26 @@ export default function Splash() {
               }}
             >
               <h4>Unleash the love and find your perfect match</h4>
-              <Link href="/login?mode=signup">
-                <Button
-                  variant="contained"
-                  onClick={handleLogin}
-                  sx={{
-                    backgroundColor: "#2d2d2d",
-                    marginTop: 2,
-                    padding: "12px 24px",
-                    fontSize: "1.1rem",
-                    textTransform: "none",
-                    borderRadius: "20px",
-                  }}
-                >
-                  Sign Up
-                </Button>
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/login?mode=signup">
+                  <Button
+                    variant="contained"
+                    onClick={handleLogin}
+                    sx={{
+                      backgroundColor: "#2d2d2d",
+                      marginTop: 2,
+                      padding: "12px 24px",
+                      fontSize: "1.1rem",
+                      textTransform: "none",
+                      borderRadius: "20px",
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              ) : (
+                <h1>Welcome back, user</h1>
+              )}
 
               <Box
                 sx={{

@@ -5,18 +5,30 @@ import { motion } from "framer-motion";
 import Navbar from "@/layouts/ui/navbar";
 import Footer from "@/layouts/ui/footer";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { loginUser } from "@/utils/api";
 
 export default function Login() {
-  const searchParams = useSearchParams();
-  const mode = searchParams.get("mode");
-  const [isSignUp, setIsSignUp] = useState(mode === "signup");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  useEffect(() => {
-    setIsSignUp(mode === "signup");
-  }, [mode]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    const success = await loginUser(name, email);
+    if (success) {
+      router.push("/");
+    } else {
+      setError("Login Failed, Please Check you Credentials");
+    }
+    setLoading(false);
+  };
 
   return (
     <>
@@ -53,14 +65,14 @@ export default function Login() {
           >
             <motion.div
               initial={{ x: 0 }}
-              animate={{ x: isSignUp ? "100%" : "0%" }}
+              animate={{ x: "0%" }}
               transition={{ duration: 1, ease: "easeInOut" }}
               style={{
                 position: "absolute",
                 width: "50%",
                 height: "500px",
                 marginTop: "-100px",
-                marginLeft: isSignUp ? "-620px" : "-375px",
+                marginLeft: "-375px",
               }}
             >
               <Image
@@ -74,7 +86,7 @@ export default function Login() {
 
             <motion.div
               initial={{ x: 0 }}
-              animate={{ x: isSignUp ? "-100%" : "0%" }}
+              animate={{ x: "0%" }}
               transition={{ duration: 1, ease: "easeInOut" }}
               style={{
                 width: "50%",
@@ -83,45 +95,44 @@ export default function Login() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                marginLeft: isSignUp ? "500px" : "500px",
+                marginLeft: "500px",
               }}
             >
-              <Box sx={{ gap: "20px" }}>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                sx={{ gap: "20px" }}
+              >
                 <Typography
                   variant="h4"
                   color="#2d2d2d"
                   sx={{ marginBottom: "20px" }}
                 >
-                  {isSignUp ? "Sign Up" : "Sign In"}
+                  {"Sign In"}
                 </Typography>
                 <FormControl fullWidth sx={{ gap: "10px" }}>
-                  <TextField label="Email" variant="outlined" required />
                   <TextField
-                    label="Password"
-                    type="password"
+                    label="Name"
                     variant="outlined"
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
                     required
                   />
-                  {isSignUp && (
-                    <TextField
-                      label="Confirm Password"
-                      type="password"
-                      variant="outlined"
-                      required
-                    />
-                  )}
-                  <Button variant="contained">
-                    {isSignUp ? "Sign Up" : "Login"}
+                  <TextField
+                    label="Email"
+                    variant="outlined"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    required
+                  />
+                  {error && <Typography color="error">{error}</Typography>}
+
+                  <Button type="submit" variant="contained">
+                    {loading ? "Logging in..." : "Login"}
                   </Button>
                 </FormControl>
-                <Button
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  sx={{ marginTop: "1rem" }}
-                >
-                  {isSignUp
-                    ? "Already have an account? Sign In"
-                    : "Don't have an account? Sign Up"}
-                </Button>
               </Box>
             </motion.div>
           </Box>

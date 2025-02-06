@@ -1,12 +1,9 @@
-import { Suspense } from "react";
-import Login from "@/layouts/login";
+import Login from "@/layouts/login/login";
 
 export default function SignUp() {
   return (
     <>
-      <Suspense fallback={<p>Loading...</p>}>
-        <Login />
-      </Suspense>
+      <Login />
     </>
   );
 }
