@@ -19,7 +19,7 @@ export default function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsLoggedIn(false);
+      setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
@@ -87,21 +87,19 @@ export default function Navbar() {
             </ul>
             <ul style={{ color: "white", cursor: "pointer" }}>About</ul>
 
-            {isLoggedIn ? (
-              <ul
-                style={{ color: "white", cursor: "pointer" }}
-                onClick={handleLogin}
-              >
-                Login
-              </ul>
-            ) : (
-              <ul
-                style={{ color: "white", cursor: "pointer" }}
-                onClick={handleLogout}
-              >
-                Log out
-              </ul>
-            )}
+            <ul
+              style={{ color: "white", cursor: "pointer" }}
+              onClick={handleLogin}
+            >
+              Login
+            </ul>
+
+            <ul
+              style={{ color: "white", cursor: "pointer" }}
+              onClick={handleLogout}
+            >
+              Log out
+            </ul>
           </Grid2>
         </Grid2>
       </Grid2>

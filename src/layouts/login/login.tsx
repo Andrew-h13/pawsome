@@ -128,7 +128,6 @@ export default function Login() {
                     required
                   />
                   {error && <Typography color="error">{error}</Typography>}
-
                   <Button type="submit" variant="contained">
                     {loading ? "Logging in..." : "Login"}
                   </Button>

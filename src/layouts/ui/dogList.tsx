@@ -27,6 +27,7 @@ export default function DogList() {
 
       try {
         const data = await getDogs([]);
+        console.log("Dogs data:", data);
 
         if (data) {
           setDogs(data);
@@ -41,24 +42,60 @@ export default function DogList() {
     fetchDogs();
   }, []);
 
+  //   useEffect(() => {
+  //     const fetchDogs = async () => {
+  //       setLoading(true);
+  //       const data = await searchDog(
+  //         [],
+  //         [],
+  //         undefined,
+  //         undefined,
+  //         from,
+  //         dogsPerPage,
+  //         { field: "name", direction: "asc" }
+  //       );
+
+  //       setDogs(data.resultIds || []);
+  //       setNext(data.next || null);
+  //       setPrev(data.prev || null);
+  //       setLoading(false);
+  //     };
+  //     fetchDogs();
+  //   }, [from]);
+
   useEffect(() => {
     const fetchDogs = async () => {
       setLoading(true);
-      const data = await searchDog(
-        [],
-        [],
-        undefined,
-        undefined,
-        from,
-        dogsPerPage,
-        { field: "name", direction: "asc" }
-      );
+      try {
+        const searchData = await searchDog(
+          [],
+          [],
+          undefined,
+          undefined,
+          from,
+          dogsPerPage,
+          { field: "name", direction: "asc" }
+        );
 
-      setDogs(data.resultIds || []);
-      setNext(data.next || null);
-      setPrev(data.prev || null);
+        console.log("Search API Response:", searchData);
+
+        if (searchData.resultIds && searchData.resultIds.length > 0) {
+          const dogsData = await getDogs(searchData.resultIds);
+          console.log("Dogs Data:", dogsData);
+          setDogs(dogsData);
+        } else {
+          setDogs([]);
+        }
+
+        setNext(searchData.next || null);
+        setPrev(searchData.prev || null);
+      } catch (error) {
+        console.error("An error occurred while fetching dogs:", error);
+        setDogs([]);
+      }
       setLoading(false);
     };
+
     fetchDogs();
   }, [from]);
 
@@ -74,8 +111,11 @@ export default function DogList() {
         ) : (
           <>
             <Grid2 container spacing={2}>
-              {dogs.map((dog) => (
-                <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dog.id}>
+              {dogs.map((dog, index) => (
+                <Grid2
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+                  key={dog.id || index}
+                >
                   <Card sx={{ backgroundColor: "#333", color: "#fff" }}>
                     <CardMedia
                       component="img"
