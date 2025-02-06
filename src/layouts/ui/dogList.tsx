@@ -9,7 +9,6 @@ import {
   CardContent,
   Typography,
   Button,
-  Fab,
 } from "@mui/material";
 import { Dog } from "@/models/types";
 import { getDogs, searchDog } from "@/utils/api";
