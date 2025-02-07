@@ -98,14 +98,13 @@ export const searchDog = async (
   ageMin?: number,
   ageMax?: number,
   from?: string,
-  size: number = 24,
+  size: number = 25,
   sort?: { field: "breed" | "name" | "age"; direction: "asc" | "desc" }
 ) => {
   const queryParams = new URLSearchParams();
 
-  if (breeds.length > 0) queryParams.append("breeds", JSON.stringify(breeds));
-  if (zipCodes.length > 0)
-    queryParams.append("zipCodes", JSON.stringify(zipCodes));
+  if (breeds.length > 0) queryParams.append("breeds", breeds.join(","));
+  if (zipCodes.length > 0) queryParams.append("zipCodes", zipCodes.join(","));
   if (ageMin !== undefined) queryParams.append("ageMin", ageMin.toString());
   if (ageMax !== undefined) queryParams.append("ageMax", ageMax.toString());
   if (from) queryParams.append("from", from);
@@ -131,7 +130,7 @@ export const searchDog = async (
     return data;
   } catch (error) {
     console.error("Error searching for dogs", error);
-    return { resultIds: [], total: 0, next: null, prev: null };
+    return { resultIds: [], total: 0, next: undefined, prev: undefined };
   }
 };
 

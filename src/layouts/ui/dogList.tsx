@@ -9,6 +9,7 @@ import {
   CardContent,
   Typography,
   Button,
+  Input,
 } from "@mui/material";
 import { Dog } from "@/models/types";
 import { getDogs, searchDog } from "@/utils/api";
@@ -21,6 +22,11 @@ export default function DogList() {
   const [next, setNext] = useState<string | undefined>(undefined);
   const [prev, setPrev] = useState<string | undefined>(undefined);
   const dogsPerPage = 24;
+
+  const [breedSearch, setBreedSearch] = useState("");
+  const [minAge, setMinAge] = useState("");
+  const [maxAge, setMaxAge] = useState("");
+  const [zipCode, setZipCode] = useState("");
 
   useEffect(() => {
     const fetchDogs = async () => {
@@ -43,7 +49,6 @@ export default function DogList() {
     fetchDogs();
   }, []);
 
-  //   useEffect(() => {
   //     const fetchDogs = async () => {
   //       setLoading(true);
   //       const data = await searchDog(
@@ -63,16 +68,59 @@ export default function DogList() {
   //     };
   //     fetchDogs();
   //   }, [from]);
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const breedArray = breedSearch.trim() ? [breedSearch.trim()] : [];
+      const zipArray = zipCode.trim() ? [zipCode.trim()] : [];
+
+      const ageMin = minAge !== "" ? Number(minAge) : undefined;
+      const ageMax = maxAge !== "" ? Number(maxAge) : undefined;
+
+      const searchData = await searchDog(
+        breedArray,
+        zipArray,
+        ageMin,
+        ageMax,
+        from,
+        dogsPerPage,
+        { field: "name", direction: "asc" }
+      );
+
+      console.log("Search API Response:", searchData);
+
+      if (searchData.resultIds && searchData.resultIds.length > 0) {
+        const dogsData = await getDogs(searchData.resultIds);
+        console.log("Dogs Data:", dogsData);
+        setDogs(dogsData);
+      } else {
+        setDogs([]);
+      }
+
+      setNext(searchData.next || undefined);
+      setPrev(searchData.prev || undefined);
+    } catch (error) {
+      console.error("An error occurred while searching for dogs:", error);
+      setDogs([]);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     const fetchDogs = async () => {
       setLoading(true);
       try {
+        const breedArray = breedSearch.trim() ? [breedSearch.trim()] : [];
+        const zipArray = zipCode.trim() ? [zipCode.trim()] : [];
+        const ageMinValue = minAge !== "" ? Number(minAge) : undefined;
+        const ageMaxValue = maxAge !== "" ? Number(maxAge) : undefined;
         const searchData = await searchDog(
-          [],
-          [],
-          undefined,
-          undefined,
+          breedArray,
+          zipArray,
+          ageMinValue,
+          ageMaxValue,
           from,
           dogsPerPage,
           { field: "name", direction: "asc" }
@@ -88,8 +136,8 @@ export default function DogList() {
           setDogs([]);
         }
 
-        setNext(searchData.next || null);
-        setPrev(searchData.prev || null);
+        setNext(searchData.next || undefined);
+        setPrev(searchData.prev || undefined);
       } catch (error) {
         console.error("An error occurred while fetching dogs:", error);
         setDogs([]);
@@ -98,10 +146,132 @@ export default function DogList() {
     };
 
     fetchDogs();
-  }, [from]);
+  }, [breedSearch, from, maxAge, minAge]);
 
   return (
     <>
+      <Box
+        component="form"
+        onSubmit={handleSearch}
+        sx={{
+          display: "flex",
+          width: "100vw",
+          height: "100px",
+          justifyContent: "center",
+          alignContent: "center",
+          backgroundColor: "#111111",
+        }}
+      >
+        <Grid2 container rowSpacing={1}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "#2d2d2d",
+              borderRadius: "25px",
+              padding: "0.5rem 1rem",
+              width: "500px",
+              height: "3rem",
+              marginTop: "25px",
+            }}
+          >
+            <PetsIcon
+              sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
+            />
+            <Input
+              placeholder="Search for your furry companion!"
+              onChange={(e) => setBreedSearch(e.target.value)}
+              sx={{
+                marginLeft: "0.75rem",
+                flex: 1,
+                color: "#ccc",
+                "& .MuiInputBase-root": {
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Grid2>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          width: "100vw",
+          height: "auto",
+        }}
+      >
+        <Grid2
+          container
+          rowSpacing={2}
+          columnSpacing={2}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            component="form"
+            onSubmit={handleSearch}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "#2d2d2d",
+              borderRadius: "25px",
+              padding: "0.5rem 1rem",
+              width: "125px",
+              height: "3rem",
+              marginTop: "25px",
+            }}
+          >
+            <PetsIcon
+              sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
+            />
+            <Input
+              placeholder="Zipcode"
+              onChange={(e) => setZipCode(e.target.value)}
+              sx={{
+                marginLeft: "0.75rem",
+                flex: 1,
+                color: "#ccc",
+                "& .MuiInputBase-root": {
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              position: "flex",
+              justifyContent: "end",
+            }}
+          >
+            <input
+              type="number"
+              placeholder="Min Age"
+              value={minAge}
+              onChange={(e) => setMinAge(e.target.value)}
+              style={{ marginRight: "10px", padding: "8px", width: "80px" }}
+            />
+            <input
+              type="number"
+              placeholder="Max Age"
+              value={maxAge}
+              onChange={(e) => setMaxAge(e.target.value)}
+              style={{ marginRight: "10px", padding: "8px", width: "80px" }}
+            />
+          </Box>
+        </Grid2>
+      </Box>
       <Box
         sx={{ padding: "20px", backgroundColor: "#222", borderRadius: "10px" }}
       >
@@ -142,26 +312,6 @@ export default function DogList() {
                       }}
                     />
                     <CardContent>
-                      <Box
-                        sx={{
-                          backgroundColor: "#FF4081",
-                          color: "#fff",
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginLeft: "auto",
-                          marginBottom: "1rem",
-                          cursor: "pointer",
-                          "&:hover": {
-                            backgroundColor: "#e0336b",
-                          },
-                        }}
-                      >
-                        <PetsIcon fontSize="small" />
-                      </Box>
                       <Typography
                         variant="h6"
                         sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}
@@ -183,6 +333,26 @@ export default function DogList() {
                       <Typography variant="body2" sx={{ fontSize: "0.9rem" }}>
                         Location: {dog.zip_code}
                       </Typography>
+                      <Box
+                        sx={{
+                          backgroundColor: "#FF4081",
+                          color: "#fff",
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginLeft: "auto",
+                          marginBottom: "1rem",
+                          cursor: "pointer",
+                          "&:hover": {
+                            backgroundColor: "#e0336b",
+                          },
+                        }}
+                      >
+                        <PetsIcon fontSize="small" />
+                      </Box>
                     </CardContent>
                   </Card>
                 </Grid2>
@@ -192,7 +362,6 @@ export default function DogList() {
               <Button
                 variant="contained"
                 color="secondary"
-                disabled={!prev}
                 onClick={() => setFrom(prev || undefined)}
               >
                 Previous
@@ -201,7 +370,6 @@ export default function DogList() {
               <Button
                 variant="contained"
                 color="primary"
-                disabled={!next}
                 onClick={() => setFrom(next || undefined)}
               >
                 Next
