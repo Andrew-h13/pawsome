@@ -51,47 +51,6 @@ export const getBreeds = async () => {
   }
 };
 
-// export const searchDog = async (
-//   breeds: string[] = [],
-//   zipCodes: string[] = [],
-//   ageMin?: number,
-//   ageMax?: number,
-//   from?: string,
-//   size: number = 24,
-//   sort?: { field: "breed" | "name" | "age"; direction: "asc" | "desc" }
-// ) => {
-//   const queryParams = new URLSearchParams();
-
-//   if (breeds.length > 0) queryParams.append("breeds", JSON.stringify(breeds));
-//   if (zipCodes.length > 0)
-//     queryParams.append("zipCodes", JSON.stringify(zipCodes));
-//   if (ageMin) queryParams.append("ageMin", ageMin.toString());
-//   if (ageMax) queryParams.append("ageMax", ageMax.toString());
-//   if (from) queryParams.append("from", from);
-//   queryParams.append("size", size.toString());
-//   if (sort) {
-//     queryParams.append("sort", `${sort.field}:${sort.direction}`);
-//   }
-
-//   const url = `${BASE_URL}/dogs/search?${queryParams.toString()}`;
-
-//   try {
-//     const res = await fetch(url, {
-//       method: "GET",
-//       credentials: "include",
-//     });
-//     if (!res.ok) {
-//       const errorText = await res.text();
-//       throw new Error(`Failed to search dogs ${errorText}`);
-//     }
-//     const data = await res.json();
-//     return data;
-//   } catch (error) {
-//     console.error("Error searching for dogs", error);
-//     return { resultIds: [], total: 0, next: null, prev: null };
-//   }
-// };
-
 export const searchDog = async (
   breeds: string[] = [],
   zipCodes: string[] = [],
@@ -127,6 +86,7 @@ export const searchDog = async (
     }
     const data = await res.json();
     console.log("Search Dog Response:", data);
+
     return data;
   } catch (error) {
     console.error("Error searching for dogs", error);

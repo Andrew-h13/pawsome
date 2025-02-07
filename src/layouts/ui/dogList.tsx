@@ -10,6 +10,8 @@ import {
   Typography,
   Button,
   Input,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { Dog } from "@/models/types";
 import { getDogs, searchDog } from "@/utils/api";
@@ -73,8 +75,13 @@ export default function DogList() {
     setLoading(true);
 
     try {
-      const breedArray = breedSearch.trim() ? [breedSearch.trim()] : [];
-      const zipArray = zipCode.trim() ? [zipCode.trim()] : [];
+      const breedArray = breedSearch.trim()
+        ? breedSearch.split(",").map((b) => b.trim())
+        : [];
+
+      const zipArray = zipCode.trim()
+        ? zipCode.split(",").map((z) => z.trim())
+        : [];
 
       const ageMin = minAge !== "" ? Number(minAge) : undefined;
       const ageMax = maxAge !== "" ? Number(maxAge) : undefined;
@@ -112,8 +119,13 @@ export default function DogList() {
     const fetchDogs = async () => {
       setLoading(true);
       try {
-        const breedArray = breedSearch.trim() ? [breedSearch.trim()] : [];
-        const zipArray = zipCode.trim() ? [zipCode.trim()] : [];
+        const breedArray = breedSearch.trim()
+          ? breedSearch.split(",").map((b) => b.trim())
+          : [];
+
+        const zipArray = zipCode.trim()
+          ? zipCode.split(",").map((z) => z.trim())
+          : [];
         const ageMinValue = minAge !== "" ? Number(minAge) : undefined;
         const ageMaxValue = maxAge !== "" ? Number(maxAge) : undefined;
         const searchData = await searchDog(
@@ -146,7 +158,7 @@ export default function DogList() {
     };
 
     fetchDogs();
-  }, [breedSearch, from, maxAge, minAge]);
+  }, [breedSearch, from, maxAge, minAge, zipCode]);
 
   return (
     <>
@@ -179,20 +191,46 @@ export default function DogList() {
             <PetsIcon
               sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
             />
-            <Input
-              placeholder="Search for your furry companion!"
-              onChange={(e) => setBreedSearch(e.target.value)}
-              sx={{
-                marginLeft: "0.75rem",
-                flex: 1,
-                color: "#ccc",
-                "& .MuiInputBase-root": {
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                },
-              }}
+
+            <Autocomplete
+              freeSolo
+              options={dogs}
+              getOptionLabel={(option) =>
+                typeof option === "string" ? option : option.breed || ""
+              }
+              inputValue={breedSearch}
+              onInputChange={(_, newValue) => setBreedSearch(newValue)}
+              loading={loading}
+              sx={{ flex: 1, marginLeft: "0.75rem" }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select a dog breed"
+                  InputLabelProps={{
+                    sx: {
+                      color: "#fff",
+                    },
+                  }}
+                  slotProps={{
+                    input: {
+                      ...params.InputProps,
+                      disableUnderline: true,
+                      sx: {
+                        color: "#fff",
+                        fontSize: "1rem",
+                      },
+                      endAdornment: (
+                        <>
+                          {loading ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps?.endAdornment}
+                        </>
+                      ),
+                    },
+                  }}
+                />
+              )}
             />
           </Box>
         </Grid2>
@@ -371,6 +409,7 @@ export default function DogList() {
                 variant="contained"
                 color="primary"
                 onClick={() => setFrom(next || undefined)}
+                disabled={!next}
               >
                 Next
               </Button>
