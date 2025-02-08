@@ -52,7 +52,12 @@ export default function Navbar() {
           width={100}
           height={100}
           onClick={handleHome}
-          style={{ cursor: "pointer", borderRadius: "25px" }}
+          style={{
+            cursor: "pointer",
+            borderRadius: "25px",
+            marginLeft: "-20px",
+            marginTop: "-10px",
+          }}
         />
       ) : (
         <h1 onClick={handleHome} style={{ cursor: "pointer" }}>

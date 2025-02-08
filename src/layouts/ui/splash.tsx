@@ -69,7 +69,7 @@ export default function Splash() {
               position: "absolute",
               top: "50%",
               left: "50%",
-              transform: "translate(-50%, -50%)",
+              transform: "translate(-50%, 50%)",
               textAlign: "center",
               color: "white",
               fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" },
@@ -112,9 +112,9 @@ export default function Splash() {
                 </Link>
               </>
             ) : (
-              <h1 style={{ maxWidth: "100%", padding: "10px" }}>
+              <h4 style={{ maxWidth: "100%", padding: "10px" }}>
                 Welcome back, {userName}! Let’s find your purrrfect match!
-              </h1>
+              </h4>
             )}
           </Box>
         </Box>
