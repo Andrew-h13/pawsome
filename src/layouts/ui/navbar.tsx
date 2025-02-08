@@ -81,13 +81,15 @@ export default function Navbar() {
       )}
 
       <Grid2 container spacing={4} sx={{ alignItems: "center", width: "auto" }}>
-        <IconButton
-          sx={{ color: "white" }}
-          aria-label="favorite"
-          onClick={handleFavorite}
-        >
-          {isMobile ? <FavoriteIcon /> : <Typography>Favorite</Typography>}
-        </IconButton>
+        {loggedIn && (
+          <IconButton
+            sx={{ color: "white" }}
+            aria-label="favorite"
+            onClick={handleFavorite}
+          >
+            {isMobile ? <FavoriteIcon /> : <Typography>Favorite</Typography>}
+          </IconButton>
+        )}
 
         <IconButton
           sx={{ color: "white" }}

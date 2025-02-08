@@ -23,10 +23,7 @@ export default function Footer() {
             </Link>
           </Grid2>
           <Grid2>
-            <Link
-              href="/favorite"
-              sx={{ color: "white", textDecoration: "none" }}
-            >
+            <Link href="/about" sx={{ color: "white", textDecoration: "none" }}>
               <Typography variant="body2">About Us</Typography>
             </Link>
           </Grid2>
