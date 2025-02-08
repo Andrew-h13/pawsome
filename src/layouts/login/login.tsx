@@ -83,7 +83,7 @@ export default function Login() {
                 position: "absolute",
                 width: isMobile ? "80%" : "50%",
                 height: "auto",
-                marginTop: isMobile ? "10px" : "-100px",
+                marginTop: isMobile ? "10px" : "5px",
                 marginLeft: isMobile ? "0" : "-375px",
               }}
             >
