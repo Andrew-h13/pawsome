@@ -23,6 +23,8 @@ export default function Login() {
     setError(null);
     const success = await loginUser(name, email);
     if (success) {
+      sessionStorage.setItem("loggedIn", "true");
+      sessionStorage.setItem("UserName", name);
       router.push("/");
     } else {
       setError("Login Failed, Please Check you Credentials");

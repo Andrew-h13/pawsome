@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PawsomeMatch",
   description: "Unleash the love and find your perfect match",
+  icons: "/favicon.png",
 };
 
 export default function RootLayout({

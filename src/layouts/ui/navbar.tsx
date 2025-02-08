@@ -1,102 +1,96 @@
 "use client";
 
-import { Box, Grid2 } from "@mui/material";
+import { Box, Grid2, Typography, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { logoutUser } from "@/utils/api";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter();
-  const handleLogin = () => {
-    router.push("/login");
-  };
-  const handleHome = () => {
-    router.push("/");
-  };
+  const [loggedIn, setLoggedIn] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-    } else {
-    }
+    const checkLoginStatus = () => {
+      const storedLoggedIn = sessionStorage.getItem("loggedIn") === "true";
+      setLoggedIn(storedLoggedIn);
+    };
+
+    checkLoginStatus();
+    window.addEventListener("storage", checkLoginStatus);
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+    };
   }, []);
+
+  const handleLogin = () => router.push("/login");
+  const handleHome = () => router.push("/");
 
   const handleLogout = async () => {
     const success = await logoutUser();
 
     if (success) {
-      localStorage.removeItem("token");
-
+      sessionStorage.removeItem("loggedIn");
+      setLoggedIn(false);
       router.push("/login");
     } else {
-      console.log("Logout failed");
+      console.error("Logout failed");
     }
   };
 
   return (
-    <>
-      <Grid2
-        sx={{
-          width: "100vw",
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "#111111",
-          padding: "0 2rem",
-          boxSizing: "border-box",
-        }}
-      >
-        <Grid2
-          container
-          spacing={2}
-          sx={{
-            justifyContent: "space-between",
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <Grid2 size="auto">
-            <Box>
-              <Box style={{ color: "white" }}>
-                <h1 onClick={handleHome} style={{ cursor: "pointer" }}>
-                  PawsomeMatch
-                </h1>
-              </Box>
-            </Box>
-          </Grid2>
-          <Grid2
-            container
-            columnSpacing={7}
-            sx={{ alignItems: "center" }}
-            size="auto"
+    <Box
+      sx={{
+        width: "100vw",
+        height: "64px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "#111",
+        padding: "0 2rem",
+        boxSizing: "border-box",
+      }}
+    >
+      {isMobile ? (
+        <Image
+          src="/assets/logos/logo_transparent.png"
+          alt="PawsomeMatch Logo"
+          width={100}
+          height={100}
+          onClick={handleHome}
+          style={{ cursor: "pointer", borderRadius: "25px" }}
+        />
+      ) : (
+        <h1 onClick={handleHome} style={{ cursor: "pointer" }}>
+          PawsomeMatch
+        </h1>
+      )}
+
+      <Grid2 container spacing={4} sx={{ alignItems: "center", width: "auto" }}>
+        <Typography sx={{ color: "white", cursor: "pointer" }}>
+          Contact
+        </Typography>
+        <Typography sx={{ color: "white", cursor: "pointer" }}>
+          About
+        </Typography>
+        {!loggedIn ? (
+          <Typography
+            sx={{ color: "white", cursor: "pointer" }}
+            onClick={handleLogin}
           >
-            <ul
-              style={{
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              Contact
-            </ul>
-            <ul style={{ color: "white", cursor: "pointer" }}>About</ul>
-
-            <ul
-              style={{ color: "white", cursor: "pointer" }}
-              onClick={handleLogin}
-            >
-              Login
-            </ul>
-
-            <ul
-              style={{ color: "white", cursor: "pointer" }}
-              onClick={handleLogout}
-            >
-              Log out
-            </ul>
-          </Grid2>
-        </Grid2>
+            Login
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ color: "white", cursor: "pointer" }}
+            onClick={handleLogout}
+          >
+            Log out
+          </Typography>
+        )}
       </Grid2>
-    </>
+    </Box>
   );
 }
