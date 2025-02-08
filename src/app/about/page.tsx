@@ -34,10 +34,10 @@ export default function About() {
 
             <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
               We believe that every dog deserves a loving home, and our platform
-              aims to make that a reality. Whether you're looking for your first
-              dog or an experienced owner, PawsomeMatch is here to help guide
-              you through the adoption process and find the perfect companion
-              for your lifestyle.
+              aims to make that a reality. Whether you&apos;re looking for your
+              first dog or an experienced owner, PawsomeMatch is here to help
+              guide you through the adoption process and find the perfect
+              companion for your lifestyle.
             </Typography>
           </Stack>
         </Box>
