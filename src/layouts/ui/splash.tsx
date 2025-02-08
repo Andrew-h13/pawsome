@@ -10,8 +10,10 @@ export default function Splash() {
   const userName = sessionStorage.getItem("UserName");
 
   useEffect(() => {
-    const storedLoggedIn = sessionStorage.getItem("loggedIn") === "true";
-    setLoggedIn(storedLoggedIn);
+    if (typeof window !== "undefined") {
+      const storedLoggedIn = sessionStorage.getItem("loggedIn") === "true";
+      setLoggedIn(storedLoggedIn);
+    }
   }, []);
 
   return (
