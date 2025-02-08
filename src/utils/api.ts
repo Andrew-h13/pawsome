@@ -56,8 +56,8 @@ export const searchDog = async (
   zipCodes: string[] = [],
   ageMin?: number,
   ageMax?: number,
-  from?: string,
-  size: number = 25,
+  from?: string | number,
+  size: number = 24,
   sort?: { field: "breed" | "name" | "age"; direction: "asc" | "desc" }
 ) => {
   const queryParams = new URLSearchParams();
@@ -66,7 +66,7 @@ export const searchDog = async (
   if (zipCodes.length > 0) queryParams.append("zipCodes", zipCodes.join(","));
   if (ageMin !== undefined) queryParams.append("ageMin", ageMin.toString());
   if (ageMax !== undefined) queryParams.append("ageMax", ageMax.toString());
-  if (from) queryParams.append("from", from);
+  if (from) queryParams.append("from", from.toString());
   queryParams.append("size", size.toString());
   if (sort) {
     queryParams.append("sort", `${sort.field}:${sort.direction}`);
@@ -115,3 +115,101 @@ export const getDogs = async (dogIds: string[]) => {
     return null;
   }
 };
+
+export const getMatchedDog = async (dogIds: string[]) => {
+  try {
+    const res = await fetch(`${BASE_URL}/dogs/match`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ids: dogIds }),
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch matched dog");
+
+    const data = await res.json();
+    return data.match;
+  } catch (error) {
+    console.error("Error fetching matched dog:", error);
+    return null;
+  }
+};
+
+export const fetchLocations = async (zipCodes: string[]) => {
+  const res = await fetch(`${BASE_URL}/locations`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(zipCodes),
+    credentials: "include",
+  });
+  return await res.json();
+};
+
+export const searchLocations = async (searchParams: {
+  city?: string;
+  states?: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  geoBoundingBox?: any;
+  size?: number;
+  from?: string;
+}) => {
+  const res = await fetch(`${BASE_URL}/locations/search`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(searchParams),
+    credentials: "include",
+  });
+  const data = await res.json();
+  console.log("Dogs fetched successfully!", data);
+  return data;
+};
+
+// export const searchLocations = async (
+//   city?: string,
+//   states?: string[],
+//   geoBoundingBox?: {
+//     top?: number;
+//     left?: number;
+//     bottom?: number;
+//     right?: number;
+//     bottom_left?: number;
+//     top_left?: number;
+//   },
+//   size: number = 25,
+//   from?: string
+// ) => {
+//   const queryParams = new URLSearchParams();
+//   if (city) {
+//     queryParams.append("city", city);
+//   }
+
+//   if (states && states.length > 0) {
+//     states.forEach((state) => queryParams.append("states", state));
+//   }
+
+//   if (geoBoundingBox) {
+//     Object.entries(geoBoundingBox).forEach(([key, value]) => {
+//       if (value !== undefined) {
+//         queryParams.append(`geoBoundingBox[${key}]`, value.toString());
+//       }
+//     });
+//   }
+
+//   queryParams.append("size", size.toString());
+//   if (from !== undefined) {
+//     queryParams.append("from", from.toString());
+//   }
+
+//   const url = `${BASE_URL}/locations/search?${queryParams.toString()}`;
+//   const response = await fetch(url);
+//   if (!response.ok) {
+//     throw new Error(`Error fetching locations: ${response.statusText}`);
+//   }
+//   return await response.json();
+// };
