@@ -86,13 +86,18 @@ export default function Splash() {
           >
             {!isLoggedIn ? (
               <>
-                <h4>Find Your Purrrfect Match and Unleash the Love</h4>
+                <h4
+                  style={{ width: "100vw", transform: "translate(-10%, 0%)" }}
+                >
+                  Find Your Purrrfect Match and Unleash the Love
+                </h4>
                 <Box
                   sx={{
                     marginTop: 2,
                     fontSize: { xs: "1rem", sm: "1.1rem" },
                     fontWeight: "normal",
-                    maxWidth: "100%",
+                    Width: "100vw",
+                    transform: "translate(0%, 0%)",
                   }}
                 >
                   Explore our database of shelter dogs to discover your new best
