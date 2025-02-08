@@ -444,7 +444,7 @@ export default function DogList() {
                       borderRadius: "16px",
                       boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
                       overflow: "hidden",
-                      position: "relative", // Ensure absolute positioning works
+                      position: "relative",
                       transition: "transform 0.3s ease, box-shadow 0.3s ease",
                       "&:hover": {
                         transform: "scale(1.05)",
@@ -488,7 +488,6 @@ export default function DogList() {
                       </CardContent>
                     </Link>
 
-                    {/* Favorite Button */}
                     <Box
                       sx={{
                         position: "absolute",
@@ -497,12 +496,12 @@ export default function DogList() {
                         backgroundColor: "rgba(0, 0, 0, 0.5)",
                         borderRadius: "50%",
                         padding: "8px",
-                        zIndex: 1, // Ensure it's above other content
+                        zIndex: 1,
                       }}
                     >
                       <IconButton
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent navigation from being triggered
+                          e.stopPropagation();
                           toggleFavorite(dog.id);
                         }}
                       >
