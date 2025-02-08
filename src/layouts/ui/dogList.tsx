@@ -12,11 +12,24 @@ import {
   Autocomplete,
   TextField,
   Pagination,
+  useMediaQuery,
+  useTheme,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import { Dog } from "@/models/types";
 import { getBreeds, getDogs, searchDog, searchLocations } from "@/utils/api";
 import PetsIcon from "@mui/icons-material/Pets";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
+interface Field {
+  placeholder: string;
+  onChange: (value: string) => void;
+  width: string;
+}
 
 export default function DogList() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -38,6 +51,11 @@ export default function DogList() {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [favoriteDogs, setFavoriteDogs] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchBreeds = async () => {
       const breedList = await getBreeds();
@@ -54,25 +72,6 @@ export default function DogList() {
     setPage(value);
   };
 
-  //     const fetchDogs = async () => {
-  //       setLoading(true);
-  //       const data = await searchDog(
-  //         [],
-  //         [],
-  //         undefined,
-  //         undefined,
-  //         from,
-  //         dogsPerPage,
-  //         { field: "name", direction: "asc" }
-  //       );
-
-  //       setDogs(data.resultIds || []);
-  //       setNext(data.next || null);
-  //       setPrev(data.prev || null);
-  //       setLoading(false);
-  //     };
-  //     fetchDogs();
-  //   }, [from]);
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -89,15 +88,27 @@ export default function DogList() {
       const ageMin = minAge !== "" ? Number(minAge) : undefined;
       const ageMax = maxAge !== "" ? Number(maxAge) : undefined;
 
-      const searchData = await searchDog(
-        breedArray,
-        zipArray,
-        ageMin,
-        ageMax,
-        page,
-        dogsPerPage,
-        { field: "name", direction: "asc" }
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const searchParams: any = { breedArray, zipArray, ageMin, ageMax };
+
+      if (city) searchParams.city = city;
+      if (states.length > 0) searchParams.states = states;
+
+      let searchData;
+
+      if (city || states.length > 0) {
+        searchData = await searchLocations(searchParams);
+      } else {
+        searchData = await searchDog(
+          breedArray,
+          zipArray,
+          ageMin,
+          ageMax,
+          page,
+          dogsPerPage,
+          { field: "name", direction: "asc" }
+        );
+      }
 
       console.log("Search API Response:", searchData);
 
@@ -112,9 +123,6 @@ export default function DogList() {
         setDogs([]);
         setTotalPages(1);
       }
-
-      //   setNext(searchData.next || undefined);
-      //   setPrev(searchData.prev || undefined);
     } catch (error) {
       console.error("An error occurred while searching for dogs:", error);
       setDogs([]);
@@ -122,39 +130,41 @@ export default function DogList() {
     setLoading(false);
   };
 
-  const handleLocationSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  //old location search(keep just incase i need it later)
 
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const searchParams: any = {};
+  //   const handleLocationSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  //     e.preventDefault();
+  //     setLoading(true);
 
-      if (city) searchParams.city = city;
-      if (states.length > 0) searchParams.states = states;
+  //     try {
+  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //       const searchParams: any = {};
 
-      const locationResults = await searchLocations(searchParams);
+  //       if (city) searchParams.city = city;
+  //       if (states.length > 0) searchParams.states = states;
 
-      console.log("Location Search API Response:", locationResults);
+  //       const locationResults = await searchLocations(searchParams);
 
-      if (locationResults.resultIds && locationResults.resultIds.length > 0) {
-        const dogsData = await getDogs(locationResults.resultIds);
-        console.log("Dogs Data:", dogsData);
+  //       console.log("Location Search API Response:", locationResults);
 
-        setDogs(dogsData);
-      } else {
-        setDogs([]);
-      }
+  //       if (locationResults.resultIds && locationResults.resultIds.length > 0) {
+  //         const dogsData = await getDogs(locationResults.resultIds);
+  //         console.log("Dogs Data:", dogsData);
 
-      //   setNext(locationResults.next || undefined);
-      //   setPrev(locationResults.prev || undefined);
-    } catch (error) {
-      console.error("An error occurred while searching for locations:", error);
-      setDogs([]);
-    }
+  //         setDogs(dogsData);
+  //       } else {
+  //         setDogs([]);
+  //       }
 
-    setLoading(false);
-  };
+  //       //   setNext(locationResults.next || undefined);
+  //       //   setPrev(locationResults.prev || undefined);
+  //     } catch (error) {
+  //       console.error("An error occurred while searching for locations:", error);
+  //       setDogs([]);
+  //     }
+
+  //     setLoading(false);
+  //   };
 
   useEffect(() => {
     const fetchDogs = async () => {
@@ -203,6 +213,43 @@ export default function DogList() {
 
     fetchDogs();
   }, [breedSearch, page, maxAge, minAge, zipCode]);
+
+  const fields: Field[] = [
+    {
+      placeholder: "Zipcode",
+      onChange: (value: string) => setZipCode(value),
+      width: "100px",
+    },
+    {
+      placeholder: "City",
+      onChange: (value: string) => setCity(value),
+      width: "125px",
+    },
+    {
+      placeholder: "State",
+      onChange: (value: string) =>
+        setStates(value.split(",").map((s) => s.trim())),
+      width: "200px",
+    },
+  ];
+
+  useEffect(() => {
+    const favorites = JSON.parse(Cookies.get("favorites") || "[]");
+    setFavoriteDogs(favorites);
+  }, []);
+
+  const toggleFavorite = (dogId: string) => {
+    let updatedFavorites = [...favoriteDogs];
+
+    if (updatedFavorites.includes(dogId)) {
+      updatedFavorites = updatedFavorites.filter((id) => id !== dogId);
+    } else {
+      updatedFavorites.push(dogId);
+    }
+
+    setFavoriteDogs(updatedFavorites);
+    Cookies.set("favorites", JSON.stringify(updatedFavorites), { expires: 30 });
+  };
 
   return (
     <>
@@ -278,12 +325,16 @@ export default function DogList() {
           </Box>
         </Grid2>
       </Box>
-
       <Box
         sx={{
           display: "flex",
           width: "100vw",
           height: "auto",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: isMobile ? "column" : "row",
+          gap: 2,
+          padding: "1rem",
         }}
       >
         <Grid2
@@ -294,116 +345,64 @@ export default function DogList() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: isMobile ? "column" : "row",
           }}
         >
-          <Box
-            component="form"
-            onSubmit={handleSearch}
+          <Stack
+            spacing={2}
+            direction={isMobile ? "column" : "row"}
             sx={{
-              display: "flex",
-              flexDirection: "row",
+              width: "100%",
+              maxWidth: isMobile ? "90%" : "600px",
               alignItems: "center",
-              backgroundColor: "#2d2d2d",
-              borderRadius: "25px",
-              padding: "0.5rem 1rem",
-              width: "125px",
-              height: "3rem",
-              marginTop: "25px",
+              justifyContent: "center",
             }}
           >
-            <PetsIcon
-              sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
-            />
-            <Input
-              placeholder="Zipcode"
-              onChange={(e) => setZipCode(e.target.value)}
-              sx={{
-                marginLeft: "0.75rem",
-                flex: 1,
-                color: "#ccc",
-                "& .MuiInputBase-root": {
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                },
-              }}
-            />
-          </Box>
-          <Box
-            component="form"
-            onSubmit={handleLocationSearch}
+            {fields.map((field, index) => (
+              <Box
+                key={index}
+                component="form"
+                onSubmit={handleSearch}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#2d2d2d",
+                  borderRadius: "25px",
+                  padding: "0.5rem 1rem",
+                  width: isMobile ? "100%" : field.width,
+                  height: "3rem",
+                  marginTop: "10px",
+                }}
+              >
+                <PetsIcon
+                  sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
+                />
+                <Input
+                  placeholder={field.placeholder}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    field.onChange(e.target.value)
+                  }
+                  sx={{
+                    marginLeft: "0.75rem",
+                    flex: 1,
+                    color: "#ccc",
+                    "& .MuiInputBase-root": {
+                      "&:focus": { outline: "none", boxShadow: "none" },
+                    },
+                  }}
+                />
+              </Box>
+            ))}
+          </Stack>
+
+          <Stack
+            spacing={2}
+            direction="row"
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "#2d2d2d",
-              borderRadius: "25px",
-              padding: "0.5rem 1rem",
-              width: "125px",
-              height: "3rem",
-              marginTop: "25px",
-            }}
-          >
-            <PetsIcon
-              sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
-            />
-            <Input
-              placeholder="City"
-              onChange={(e) => setCity(e.target.value)}
-              sx={{
-                marginLeft: "0.75rem",
-                flex: 1,
-                color: "#ccc",
-                "& .MuiInputBase-root": {
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                },
-              }}
-            />
-          </Box>
-          <Box
-            component="form"
-            onSubmit={handleLocationSearch}
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "#2d2d2d",
-              borderRadius: "25px",
-              padding: "0.5rem 1rem",
-              width: "200px",
-              height: "3rem",
-              marginTop: "25px",
-            }}
-          >
-            <PetsIcon
-              sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
-            />
-            <Input
-              placeholder="State"
-              onChange={(e) =>
-                setStates(e.target.value.split(",").map((s) => s.trim()))
-              }
-              sx={{
-                marginLeft: "0.75rem",
-                flex: 1,
-                color: "#ccc",
-                "& .MuiInputBase-root": {
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                },
-              }}
-            />
-          </Box>
-          <Box
-            sx={{
-              position: "flex",
-              justifyContent: "end",
+              justifyContent: isMobile ? "center" : "end",
+              width: isMobile ? "100%" : "auto",
+              marginTop: "10px",
             }}
           >
             <input
@@ -411,16 +410,16 @@ export default function DogList() {
               placeholder="Min Age"
               value={minAge}
               onChange={(e) => setMinAge(e.target.value)}
-              style={{ marginRight: "10px", padding: "8px", width: "80px" }}
+              style={{ padding: "8px", width: "80px" }}
             />
             <input
               type="number"
               placeholder="Max Age"
               value={maxAge}
               onChange={(e) => setMaxAge(e.target.value)}
-              style={{ marginRight: "10px", padding: "8px", width: "80px" }}
+              style={{ padding: "8px", width: "80px" }}
             />
-          </Box>
+          </Stack>
         </Grid2>
       </Box>
       <Box
@@ -445,6 +444,7 @@ export default function DogList() {
                       borderRadius: "16px",
                       boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
                       overflow: "hidden",
+                      position: "relative", // Ensure absolute positioning works
                       transition: "transform 0.3s ease, box-shadow 0.3s ease",
                       "&:hover": {
                         transform: "scale(1.05)",
@@ -485,29 +485,34 @@ export default function DogList() {
                         <Typography variant="body2" sx={{ fontSize: "0.9rem" }}>
                           Location: {dog.zip_code}
                         </Typography>
-
-                        <Box
-                          sx={{
-                            backgroundColor: "#FF4081",
-                            color: "#fff",
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "50%",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            marginLeft: "auto",
-                            marginBottom: "1rem",
-                            cursor: "pointer",
-                            "&:hover": {
-                              backgroundColor: "#e0336b",
-                            },
-                          }}
-                        >
-                          <PetsIcon fontSize="small" />
-                        </Box>
                       </CardContent>
                     </Link>
+
+                    {/* Favorite Button */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "50%",
+                        padding: "8px",
+                        zIndex: 1, // Ensure it's above other content
+                      }}
+                    >
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent navigation from being triggered
+                          toggleFavorite(dog.id);
+                        }}
+                      >
+                        {favoriteDogs.includes(dog.id) ? (
+                          <FavoriteIcon sx={{ color: "red" }} />
+                        ) : (
+                          <FavoriteBorderIcon sx={{ color: "white" }} />
+                        )}
+                      </IconButton>
+                    </Box>
                   </Card>
                 </Grid2>
               ))}

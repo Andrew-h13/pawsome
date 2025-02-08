@@ -86,9 +86,7 @@ export default function Splash() {
           >
             {!isLoggedIn ? (
               <>
-                <h4
-                  style={{ width: "100vw", transform: "translate(-10%, 0%)" }}
-                >
+                <h4 style={{ width: "90vw", transform: "translate(-5%, 0%)" }}>
                   Find Your Purrrfect Match and Unleash the Love
                 </h4>
                 <Box
@@ -101,7 +99,7 @@ export default function Splash() {
                   }}
                 >
                   Explore our database of shelter dogs to discover your new best
-                  friend.
+                  friend
                 </Box>
                 <Link href="/login?mode=signup">
                   <Button
@@ -110,6 +108,7 @@ export default function Splash() {
                       backgroundColor: "#2d2d2d",
                       marginTop: 3,
                       padding: "12px 24px",
+                      transform: "translate(0%,0%)",
                       fontSize: "1.1rem",
                       textTransform: "none",
                       borderRadius: "20px",
@@ -121,7 +120,15 @@ export default function Splash() {
                 </Link>
               </>
             ) : (
-              <h4 style={{ maxWidth: "100%", padding: "10px" }}>
+              <h4
+                style={{
+                  width: isMobile ? "40vh" : "100vh",
+                  padding: "1rem",
+                  transform: isMobile
+                    ? "translate(-5%, 100%)"
+                    : "translate(-10%, 100%)",
+                }}
+              >
                 Welcome back, {userName}! Let’s find your purrrfect match!
               </h4>
             )}

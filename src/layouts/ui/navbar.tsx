@@ -1,6 +1,17 @@
 "use client";
 
-import { Box, Grid2, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Grid2,
+  Typography,
+  useMediaQuery,
+  IconButton,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import InfoIcon from "@mui/icons-material/Info";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logoutUser } from "@/utils/api";
@@ -19,6 +30,9 @@ export default function Navbar() {
 
   const handleLogin = () => router.push("/login");
   const handleHome = () => router.push("/");
+  const handleFavorite = () => router.push("/favorite");
+  const handleAbout = () => router.push("/about");
+  const handleContact = () => router.push("/contact");
 
   const handleLogout = async () => {
     const success = await logoutUser();
@@ -43,6 +57,7 @@ export default function Navbar() {
         backgroundColor: "#111",
         padding: "0 2rem",
         boxSizing: "border-box",
+        borderRadius: "10px",
       }}
     >
       {isMobile ? (
@@ -66,26 +81,46 @@ export default function Navbar() {
       )}
 
       <Grid2 container spacing={4} sx={{ alignItems: "center", width: "auto" }}>
-        <Typography sx={{ color: "white", cursor: "pointer" }}>
-          Contact
-        </Typography>
-        <Typography sx={{ color: "white", cursor: "pointer" }}>
-          About
-        </Typography>
+        <IconButton
+          sx={{ color: "white" }}
+          aria-label="favorite"
+          onClick={handleFavorite}
+        >
+          {isMobile ? <FavoriteIcon /> : <Typography>Favorite</Typography>}
+        </IconButton>
+
+        <IconButton
+          sx={{ color: "white" }}
+          aria-label="contact"
+          onClick={handleContact}
+        >
+          {isMobile ? <ContactMailIcon /> : <Typography>Contact</Typography>}
+        </IconButton>
+
+        <IconButton
+          sx={{ color: "white" }}
+          aria-label="about"
+          onClick={handleAbout}
+        >
+          {isMobile ? <InfoIcon /> : <Typography>About</Typography>}
+        </IconButton>
+
         {!loggedIn ? (
-          <Typography
-            sx={{ color: "white", cursor: "pointer" }}
+          <IconButton
+            sx={{ color: "white" }}
+            aria-label="login"
             onClick={handleLogin}
           >
-            Login
-          </Typography>
+            {isMobile ? <LoginIcon /> : <Typography>Login</Typography>}
+          </IconButton>
         ) : (
-          <Typography
-            sx={{ color: "white", cursor: "pointer" }}
+          <IconButton
+            sx={{ color: "white" }}
+            aria-label="logout"
             onClick={handleLogout}
           >
-            Log out
-          </Typography>
+            {isMobile ? <LogoutIcon /> : <Typography>Log out</Typography>}
+          </IconButton>
         )}
       </Grid2>
     </Box>
