@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import Navbar from "@/layouts/ui/navbar";
 import Footer from "@/layouts/ui/footer";
@@ -16,6 +23,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,16 +58,18 @@ export default function Login() {
             width: "100vw",
             overflow: "hidden",
             flexGrow: 1,
+            padding: isMobile ? "1rem" : "2rem",
           }}
         >
           <Box
             sx={{
               display: "flex",
               backgroundColor: "#fff",
-              width: "1000px",
-              height: "600px",
+              flexDirection: isMobile ? "column" : "row",
               justifyContent: "center",
               alignItems: "center",
+              width: isMobile ? "90%" : "1000px",
+              height: isMobile ? "auto" : "600px",
               borderRadius: "20px",
               overflow: "hidden",
               transition: "all 0.5s ease-in-out",
@@ -71,17 +81,17 @@ export default function Login() {
               transition={{ duration: 1, ease: "easeInOut" }}
               style={{
                 position: "absolute",
-                width: "50%",
-                height: "500px",
-                marginTop: "-100px",
-                marginLeft: "-375px",
+                width: isMobile ? "80%" : "50%",
+                height: "auto",
+                marginTop: isMobile ? "10px" : "-100px",
+                marginLeft: isMobile ? "0" : "-375px",
               }}
             >
               <Image
                 src={"/assets/logindog.jpg"}
                 alt="hero"
-                width={500}
-                height={605}
+                width={isMobile ? 0 : 500}
+                height={isMobile ? 0 : 605}
                 style={{ borderRadius: "20px" }}
               />
             </motion.div>
@@ -91,26 +101,26 @@ export default function Login() {
               animate={{ x: "0%" }}
               transition={{ duration: 1, ease: "easeInOut" }}
               style={{
-                width: "50%",
-                padding: "2rem",
+                width: isMobile ? "100%" : "50%",
+                padding: isMobile ? "1rem" : "2rem",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                marginLeft: "500px",
+                marginLeft: isMobile ? "0" : "500px",
               }}
             >
               <Box
                 component="form"
                 onSubmit={handleSubmit}
-                sx={{ gap: "20px" }}
+                sx={{ gap: "20px", width: "100%" }}
               >
                 <Typography
-                  variant="h4"
+                  variant={isMobile ? "h5" : "h4"}
                   color="#2d2d2d"
-                  sx={{ marginBottom: "20px" }}
+                  sx={{ marginBottom: "20px", textAlign: "center" }}
                 >
-                  {"Sign In"}
+                  Sign In
                 </Typography>
                 <FormControl fullWidth sx={{ gap: "10px" }}>
                   <TextField
@@ -130,7 +140,11 @@ export default function Login() {
                     required
                   />
                   {error && <Typography color="error">{error}</Typography>}
-                  <Button type="submit" variant="contained">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ width: "100%" }}
+                  >
                     {loading ? "Logging in..." : "Login"}
                   </Button>
                 </FormControl>

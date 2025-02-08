@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid2, Box, Button } from "@mui/material";
+import { Grid2, Box, Button, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 export default function Splash() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const storedLoggedIn = Cookies.get("loggedIn") === "true";
@@ -34,7 +35,7 @@ export default function Splash() {
       <Grid2
         size={{
           xs: 12,
-          sm: 6,
+          sm: 12,
           md: 12,
         }}
         sx={{
@@ -69,7 +70,10 @@ export default function Splash() {
               position: "absolute",
               top: "50%",
               left: "50%",
-              transform: "translate(-50%, 50%)",
+
+              transform: isMobile
+                ? "translate(-50%, 10%)"
+                : "translate(-50%, 50%)",
               textAlign: "center",
               color: "white",
               fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" },
