@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logoutUser } from "@/utils/api";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 export default function Navbar() {
   const router = useRouter();
@@ -12,17 +13,8 @@ export default function Navbar() {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
-    const checkLoginStatus = () => {
-      const storedLoggedIn = sessionStorage.getItem("loggedIn") === "true";
-      setLoggedIn(storedLoggedIn);
-    };
-
-    checkLoginStatus();
-    window.addEventListener("storage", checkLoginStatus);
-
-    return () => {
-      window.removeEventListener("storage", checkLoginStatus);
-    };
+    const storedLoggedIn = Cookies.get("loggedIn") === "true";
+    setLoggedIn(storedLoggedIn);
   }, []);
 
   const handleLogin = () => router.push("/login");
@@ -31,12 +23,12 @@ export default function Navbar() {
   const handleLogout = async () => {
     const success = await logoutUser();
 
-    if (success) {
-      sessionStorage.removeItem("loggedIn");
+    if (success && typeof window !== "undefined") {
+      Cookies.remove("loggedIn");
       setLoggedIn(false);
       router.push("/login");
     } else {
-      console.error("Logout failed");
+      console.log("Logout failed");
     }
   };
 

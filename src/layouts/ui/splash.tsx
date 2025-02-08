@@ -4,15 +4,19 @@ import { Grid2, Box, Button } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 export default function Splash() {
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const userName = sessionStorage.getItem("UserName");
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedLoggedIn = sessionStorage.getItem("loggedIn") === "true";
-      setLoggedIn(storedLoggedIn);
+    const storedLoggedIn = Cookies.get("loggedIn") === "true";
+    setLoggedIn(storedLoggedIn);
+
+    if (storedLoggedIn) {
+      const storedUserName = Cookies.get("UserName") || null;
+      setUserName(storedUserName);
     }
   }, []);
 

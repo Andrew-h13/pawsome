@@ -6,9 +6,9 @@ import Navbar from "@/layouts/ui/navbar";
 import Footer from "@/layouts/ui/footer";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import { useState } from "react";
 import { loginUser } from "@/utils/api";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -23,11 +23,11 @@ export default function Login() {
     setError(null);
     const success = await loginUser(name, email);
     if (success) {
-      sessionStorage.setItem("loggedIn", "true");
-      sessionStorage.setItem("UserName", name);
+      Cookies.set("loggedIn", "true", { expires: 7 });
+      Cookies.set("UserName", name, { expires: 7 });
       router.push("/");
     } else {
-      setError("Login Failed, Please Check you Credentials");
+      setError("Login Failed, Please Check your Credentials");
     }
     setLoading(false);
   };
