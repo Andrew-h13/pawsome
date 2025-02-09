@@ -59,7 +59,9 @@ export default function DogList() {
   useEffect(() => {
     const fetchBreeds = async () => {
       const breedList = await getBreeds();
+
       setBreeds(breedList);
+      console.log("All Breeds:", breedList);
     };
 
     fetchBreeds();
@@ -218,12 +220,12 @@ export default function DogList() {
     {
       placeholder: "Zipcode",
       onChange: (value: string) => setZipCode(value),
-      width: "100px",
+      width: "150px",
     },
     {
       placeholder: "City",
       onChange: (value: string) => setCity(value),
-      width: "125px",
+      width: "150px",
     },
     {
       placeholder: "State",

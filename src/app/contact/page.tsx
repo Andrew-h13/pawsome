@@ -1,6 +1,6 @@
 import Footer from "@/layouts/ui/footer";
 import Navbar from "@/layouts/ui/navbar";
-import { Box, Typography, Stack, Button, Grid2 } from "@mui/material";
+import { Box, Typography, Stack, Grid2 } from "@mui/material";
 
 export default function Contact() {
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -19,11 +19,26 @@ export default function Contact() {
 
         <Box
           sx={{
-            padding: "2rem",
+            padding: "3rem",
             flex: 1,
+            backgroundColor: "#111",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            marginTop: "2rem",
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "1200px",
           }}
         >
-          <Typography variant="h4" sx={{ marginBottom: "2rem" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              marginBottom: "2rem",
+              fontWeight: "bold",
+              color: "#fff",
+              textAlign: "center",
+            }}
+          >
             Contact Us
           </Typography>
 
@@ -35,24 +50,42 @@ export default function Contact() {
               }}
             >
               <Stack spacing={2}>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                  Email Us:
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", color: "#fff" }}
+                >
+                  Get in Touch:
                 </Typography>
-                <Typography variant="body1">
-                  If you have any questions or need assistance, please reach out
-                  to us at:
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  Should you have any inquiries or require assistance, please
+                  feel free to reach out to us at:
                 </Typography>
-                <Typography variant="body1" sx={{ color: "blue" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: "bold", color: "#fff" }}
+                >
                   contact@pawsomematch.com
                 </Typography>
 
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: "1rem" }}
-                >
-                  Send a Message
-                </Button>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  If you are considering adopting a pet, we encourage you to
+                  explore Three Little Pitties Rescue for more information.
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  Visit their website:{" "}
+                  <a
+                    href="https://www.threelittlepittiesrescue.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      textDecoration: "none",
+                      color: "#FF4081",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    https://www.threelittlepittiesrescue.org/
+                  </a>
+                </Typography>
               </Stack>
             </Grid2>
 
@@ -62,21 +95,26 @@ export default function Contact() {
                 md: 6,
               }}
             >
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                Our Location:
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: "bold", color: "#fff" }}
+              >
+                Three Little Pitties Rescue Location:
               </Typography>
               <Box
                 sx={{
                   width: "100%",
-                  height: "200px",
+                  height: "300px",
                   borderRadius: "8px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                 }}
               >
                 <iframe
                   src={mapUrl}
                   width="100%"
                   height="100%"
-                  style={{ borderRadius: "8px" }}
+                  style={{ border: "none", borderRadius: "8px" }}
                   allowFullScreen
                   aria-hidden="false"
                   tabIndex={0}

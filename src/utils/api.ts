@@ -123,13 +123,14 @@ export const getMatchedDog = async (dogIds: string[]) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ids: dogIds }),
+      body: JSON.stringify(dogIds),
       credentials: "include",
     });
 
     if (!res.ok) throw new Error("Failed to fetch matched dog");
 
     const data = await res.json();
+    console.log("API Response (Matched Dog):", data);
     return data.match;
   } catch (error) {
     console.error("Error fetching matched dog:", error);
