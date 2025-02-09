@@ -19,7 +19,7 @@ export default function Contact() {
 
         <Box
           sx={{
-            padding: "3rem",
+            padding: { xs: "2rem", md: "3rem" },
             flex: 1,
             backgroundColor: "#111",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
@@ -27,7 +27,7 @@ export default function Contact() {
             marginTop: "2rem",
             marginLeft: "auto",
             marginRight: "auto",
-            width: "1200px",
+            maxWidth: { xs: "90vw", md: "800px", lg: "1200px" },
           }}
         >
           <Typography
@@ -37,18 +37,14 @@ export default function Contact() {
               fontWeight: "bold",
               color: "#fff",
               textAlign: "center",
+              fontSize: { xs: "1.8rem", md: "2.5rem" },
             }}
           >
             Contact Us
           </Typography>
 
           <Grid2 container spacing={4}>
-            <Grid2
-              size={{
-                xs: 12,
-                md: 6,
-              }}
-            >
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <Stack spacing={2}>
                 <Typography
                   variant="h6"
@@ -89,12 +85,7 @@ export default function Contact() {
               </Stack>
             </Grid2>
 
-            <Grid2
-              size={{
-                xs: 12,
-                md: 6,
-              }}
-            >
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <Typography
                 variant="h6"
                 sx={{ fontWeight: "bold", color: "#fff" }}
@@ -104,7 +95,7 @@ export default function Contact() {
               <Box
                 sx={{
                   width: "100%",
-                  height: "300px",
+                  height: { xs: "250px", md: "300px" },
                   borderRadius: "8px",
                   overflow: "hidden",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
