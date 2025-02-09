@@ -40,6 +40,7 @@ export default function Navbar() {
     if (success && typeof window !== "undefined") {
       Cookies.remove("loggedIn");
       Cookies.remove("UserName");
+      Cookies.remove("favorites");
       setLoggedIn(false);
       router.push("/login");
     } else {
