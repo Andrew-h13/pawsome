@@ -39,6 +39,7 @@ export default function Navbar() {
 
     if (success && typeof window !== "undefined") {
       Cookies.remove("loggedIn");
+      Cookies.remove("UserName");
       setLoggedIn(false);
       router.push("/login");
     } else {
@@ -80,7 +81,11 @@ export default function Navbar() {
         </h1>
       )}
 
-      <Grid2 container spacing={4} sx={{ alignItems: "center", width: "auto" }}>
+      <Grid2
+        container
+        spacing={isMobile ? "1" : "4"}
+        sx={{ alignItems: "center", width: "auto" }}
+      >
         {loggedIn && (
           <IconButton
             sx={{ color: "white" }}
