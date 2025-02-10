@@ -16,6 +16,10 @@ import {
   useTheme,
   Stack,
   IconButton,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { Dog } from "@/models/types";
 import { getBreeds, getDogs, searchDog, searchLocations } from "@/utils/api";
@@ -34,10 +38,9 @@ interface Field {
 export default function DogList() {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [loading, setLoading] = useState(false);
-  //   const [from, setFrom] = useState<string | undefined>(undefined);
-  //   const [next, setNext] = useState<string | undefined>(undefined);
-  //   const [prev, setPrev] = useState<string | undefined>(undefined);
-  const dogsPerPage = 24;
+  const [pageSize, setPageSize] = useState(25);
+  const [sortField, setSortField] = useState<"breed" | "name" | "age">("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const [breedSearch, setBreedSearch] = useState("");
   const [minAge, setMinAge] = useState("");
@@ -67,6 +70,10 @@ export default function DogList() {
     fetchBreeds();
   }, []);
 
+  useEffect(() => {
+    setPage(1);
+  }, [pageSize, sortField, sortDirection]);
+
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -90,25 +97,31 @@ export default function DogList() {
       const ageMin = minAge !== "" ? Number(minAge) : undefined;
       const ageMax = maxAge !== "" ? Number(maxAge) : undefined;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const searchParams: any = { breedArray, zipArray, ageMin, ageMax };
-
-      if (city) searchParams.city = city;
-      if (states.length > 0) searchParams.states = states;
+      const from = (page - 1) * pageSize;
 
       let searchData;
 
       if (city || states.length > 0) {
-        searchData = await searchLocations(searchParams);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const locationParams: any = {};
+        if (city) locationParams.city = city;
+        if (states.length > 0) locationParams.states = states;
+
+        searchData = await searchLocations({
+          ...locationParams,
+          from: (page - 1) * pageSize,
+          size: pageSize,
+          sort: { field: sortField, direction: sortDirection },
+        });
       } else {
         searchData = await searchDog(
           breedArray,
           zipArray,
           ageMin,
           ageMax,
-          page,
-          dogsPerPage,
-          { field: "name", direction: "asc" }
+          from,
+          pageSize,
+          { field: sortField, direction: sortDirection }
         );
       }
 
@@ -118,9 +131,7 @@ export default function DogList() {
         const dogsData = await getDogs(searchData.resultIds);
         console.log("Dogs Data:", dogsData);
         setDogs(dogsData);
-        setTotalPages(
-          searchData.totalPages || Math.ceil(searchData.total / dogsPerPage)
-        );
+        setTotalPages(Math.ceil((searchData.total || 0) / pageSize));
       } else {
         setDogs([]);
         setTotalPages(1);
@@ -131,42 +142,6 @@ export default function DogList() {
     }
     setLoading(false);
   };
-
-  //old location search(keep just incase i need it later)
-
-  //   const handleLocationSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     setLoading(true);
-
-  //     try {
-  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //       const searchParams: any = {};
-
-  //       if (city) searchParams.city = city;
-  //       if (states.length > 0) searchParams.states = states;
-
-  //       const locationResults = await searchLocations(searchParams);
-
-  //       console.log("Location Search API Response:", locationResults);
-
-  //       if (locationResults.resultIds && locationResults.resultIds.length > 0) {
-  //         const dogsData = await getDogs(locationResults.resultIds);
-  //         console.log("Dogs Data:", dogsData);
-
-  //         setDogs(dogsData);
-  //       } else {
-  //         setDogs([]);
-  //       }
-
-  //       //   setNext(locationResults.next || undefined);
-  //       //   setPrev(locationResults.prev || undefined);
-  //     } catch (error) {
-  //       console.error("An error occurred while searching for locations:", error);
-  //       setDogs([]);
-  //     }
-
-  //     setLoading(false);
-  //   };
 
   useEffect(() => {
     const fetchDogs = async () => {
@@ -179,17 +154,37 @@ export default function DogList() {
         const zipArray = zipCode.trim()
           ? zipCode.split(",").map((z) => z.trim())
           : [];
+
         const ageMinValue = minAge !== "" ? Number(minAge) : undefined;
         const ageMaxValue = maxAge !== "" ? Number(maxAge) : undefined;
-        const searchData = await searchDog(
-          breedArray,
-          zipArray,
-          ageMinValue,
-          ageMaxValue,
-          page,
-          dogsPerPage,
-          { field: "name", direction: "asc" }
-        );
+
+        const from = (page - 1) * pageSize;
+
+        let searchData;
+
+        if (city || states.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const locationParams: any = {};
+          if (city) locationParams.city = city;
+          if (states.length > 0) locationParams.states = states;
+
+          searchData = await searchLocations({
+            ...locationParams,
+            from: (page - 1) * pageSize,
+            size: pageSize,
+            sort: { field: sortField, direction: sortDirection },
+          });
+        } else {
+          searchData = await searchDog(
+            breedArray,
+            zipArray,
+            ageMinValue,
+            ageMaxValue,
+            from,
+            pageSize,
+            { field: sortField, direction: sortDirection }
+          );
+        }
 
         console.log("Search API Response:", searchData);
 
@@ -197,15 +192,10 @@ export default function DogList() {
           const dogsData = await getDogs(searchData.resultIds);
           console.log("Dogs Data:", dogsData);
           setDogs(dogsData);
-          setTotalPages(
-            searchData.totalPages || Math.ceil(searchData.total / dogsPerPage)
-          );
+          setTotalPages(Math.ceil((searchData.total || 0) / pageSize));
         } else {
           setDogs([]);
         }
-
-        // setNext(searchData.next || undefined);
-        // setPrev(searchData.prev || undefined);
       } catch (error) {
         console.error("An error occurred while fetching dogs:", error);
         setDogs([]);
@@ -214,7 +204,18 @@ export default function DogList() {
     };
 
     fetchDogs();
-  }, [breedSearch, page, maxAge, minAge, zipCode]);
+  }, [
+    breedSearch,
+    page,
+    maxAge,
+    minAge,
+    zipCode,
+    city,
+    states,
+    pageSize,
+    sortField,
+    sortDirection,
+  ]);
 
   const fields: Field[] = [
     {
@@ -398,30 +399,102 @@ export default function DogList() {
             ))}
           </Stack>
 
-          <Stack
-            spacing={2}
-            direction="row"
-            sx={{
-              justifyContent: isMobile ? "center" : "end",
-              width: isMobile ? "100%" : "auto",
-              marginTop: "10px",
-            }}
-          >
-            <input
-              type="number"
-              placeholder="Min Age"
-              value={minAge}
-              onChange={(e) => setMinAge(e.target.value)}
-              style={{ padding: "8px", width: "80px" }}
-            />
-            <input
-              type="number"
-              placeholder="Max Age"
-              value={maxAge}
-              onChange={(e) => setMaxAge(e.target.value)}
-              style={{ padding: "8px", width: "80px" }}
-            />
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+            <Box>
+              <InputLabel sx={{ color: "white" }}>Min Age</InputLabel>
+              <input
+                type="number"
+                placeholder="Min Age"
+                value={minAge}
+                onChange={(e) => setMinAge(e.target.value)}
+                style={{ padding: "8px", width: "100px" }}
+              />
+            </Box>
+            <Box>
+              <InputLabel sx={{ color: "white" }}>Max Age</InputLabel>
+              <input
+                type="number"
+                placeholder="Max Age"
+                value={maxAge}
+                onChange={(e) => setMaxAge(e.target.value)}
+                style={{ padding: "8px", width: "100px" }}
+              />
+            </Box>
           </Stack>
+          <Grid2 size={{ xs: 12, md: 6 }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{ alignItems: "center", justifyContent: "center" }}
+            >
+              <FormControl sx={{ minWidth: 120 }}>
+                <InputLabel
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#2d2d2d",
+                    padding: "0 4px",
+                  }}
+                >
+                  Sort By
+                </InputLabel>
+                <Select
+                  value={sortField}
+                  onChange={(e) =>
+                    setSortField(e.target.value as "breed" | "name" | "age")
+                  }
+                  sx={{
+                    backgroundColor: "#2d2d2d",
+                    color: "white",
+                    borderRadius: "25px",
+                    "& .MuiSelect-icon": { color: "white" },
+                  }}
+                >
+                  <MenuItem value="breed">Breed</MenuItem>
+                  <MenuItem value="name">Name</MenuItem>
+                  <MenuItem value="age">Age</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 120 }}>
+                <InputLabel sx={{ color: "white" }}>Direction</InputLabel>
+                <Select
+                  value={sortDirection}
+                  onChange={(e) =>
+                    setSortDirection(e.target.value as "asc" | "desc")
+                  }
+                  sx={{
+                    backgroundColor: "#2d2d2d",
+                    color: "white",
+                    borderRadius: "25px",
+                    "& .MuiSelect-icon": { color: "white" },
+                  }}
+                >
+                  <MenuItem value="asc">Ascending</MenuItem>
+                  <MenuItem value="desc">Descending</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 140 }}>
+                <InputLabel sx={{ color: "white" }}>
+                  Results per page
+                </InputLabel>
+                <Select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}
+                  sx={{
+                    backgroundColor: "#2d2d2d",
+                    color: "white",
+                    borderRadius: "25px",
+                    "& .MuiSelect-icon": { color: "white" },
+                  }}
+                >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={25}>25</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+          </Grid2>
         </Grid2>
       </Box>
       <Box
