@@ -78,7 +78,7 @@ export default function Splash() {
               color: "white",
               fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" },
               fontWeight: "bold",
-              maxWidth: "85%",
+              maxWidth: isMobile ? "85%" : "1200px",
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)",
               zIndex: 2,
               padding: { xs: "10px", sm: "20px" },
@@ -88,7 +88,7 @@ export default function Splash() {
               <>
                 <h4
                   style={{
-                    width: "90vw",
+                    width: isMobile ? "90vw" : "100vw",
                     transform: "translate(-5%, 0%)",
                     color: "#fff",
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
@@ -110,7 +110,9 @@ export default function Splash() {
                     padding: "1rem",
                     borderRadius: "10px",
                     textAlign: "center",
-                    transform: "translate(-10%, 0%)",
+                    transform: isMobile
+                      ? "translate(-10%, 0%)"
+                      : "translate(-5%, 0%)",
                   }}
                 >
                   Explore our database of shelter dogs to discover your new best
@@ -140,7 +142,7 @@ export default function Splash() {
                   padding: "1rem",
                   transform: isMobile
                     ? "translate(-5%, 100%)"
-                    : "translate(-10%, 100%)",
+                    : "translate(-5%, 100%)",
                   color: "#fff",
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                   borderRadius: "10px",
