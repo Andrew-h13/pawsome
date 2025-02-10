@@ -31,8 +31,8 @@ export default function Login() {
     setError(null);
     const success = await loginUser(name, email);
     if (success) {
-      Cookies.set("loggedIn", "true", { expires: 7 });
-      Cookies.set("UserName", name, { expires: 7 });
+      Cookies.set("loggedIn", "true", { expires: 1 });
+      Cookies.set("UserName", name, { expires: 1 });
       router.push("/");
     } else {
       setError("Login Failed, Please Check your Credentials");
@@ -47,114 +47,129 @@ export default function Login() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
+          minHeight: "100vh",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: isMobile ? "1rem" : "2rem",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            flexDirection: isMobile ? "column" : "row",
             alignItems: "center",
-            width: "100vw",
+            justifyContent: "center",
+            backgroundColor: "#fff",
+            width: isMobile ? "90%" : "1000px",
+            height: isMobile ? "auto" : "550px",
+            borderRadius: "20px",
             overflow: "hidden",
-            flexGrow: 1,
-            padding: isMobile ? "1rem" : "2rem",
+            transition: "all 0.5s ease-in-out",
+            border: "4px solid black",
+            boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.2)",
           }}
         >
-          <Box
-            sx={{
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            style={{
+              width: isMobile ? "100%" : "50%",
               display: "flex",
-              backgroundColor: "#fff",
-              flexDirection: isMobile ? "column" : "row",
               justifyContent: "center",
               alignItems: "center",
-              width: isMobile ? "90%" : "1000px",
-              height: isMobile ? "auto" : "600px",
-              borderRadius: "20px",
-              overflow: "hidden",
-              transition: "all 0.5s ease-in-out",
+              padding: isMobile ? "1rem" : "2rem",
             }}
           >
-            <motion.div
-              initial={{ x: 0 }}
-              animate={{ x: "0%" }}
-              transition={{ duration: 1, ease: "easeInOut" }}
+            <Image
+              src={"/assets/logindog.jpg"}
+              alt="hero"
+              width={isMobile ? 400 : 500}
+              height={isMobile ? 350 : 500}
               style={{
-                position: "absolute",
-                width: isMobile ? "80%" : "50%",
-                height: "auto",
-                marginTop: isMobile ? "10px" : "5px",
-                marginLeft: isMobile ? "0" : "-375px",
+                borderRadius: "20px",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "cover",
               }}
-            >
-              <Image
-                src={"/assets/logindog.jpg"}
-                alt="hero"
-                width={isMobile ? 0 : 500}
-                height={isMobile ? 0 : 605}
-                style={{ borderRadius: "20px" }}
-              />
-            </motion.div>
+            />
+          </motion.div>
 
-            <motion.div
-              initial={{ x: 0 }}
-              animate={{ x: "0%" }}
-              transition={{ duration: 1, ease: "easeInOut" }}
-              style={{
-                width: isMobile ? "100%" : "50%",
-                padding: isMobile ? "1rem" : "2rem",
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            style={{
+              width: isMobile ? "100%" : "50%",
+              padding: isMobile ? "2rem" : "3rem",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                marginLeft: isMobile ? "0" : "500px",
+                gap: "20px",
+                width: "100%",
+                maxWidth: "400px",
               }}
             >
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{ gap: "20px", width: "100%" }}
+              <Typography
+                variant={isMobile ? "h5" : "h4"}
+                color="#2d2d2d"
+                sx={{
+                  marginBottom: isMobile ? "10px" : "20px",
+                  textAlign: "center",
+                }}
               >
-                <Typography
-                  variant={isMobile ? "h5" : "h4"}
-                  color="#2d2d2d"
-                  sx={{ marginBottom: "20px", textAlign: "center" }}
+                Sign In
+              </Typography>
+              <FormControl fullWidth sx={{ gap: "10px" }}>
+                <TextField
+                  label="Name"
+                  variant="outlined"
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                {error && <Typography color="error">{error}</Typography>}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    width: "100%",
+                    backgroundColor: "#FF4081",
+                    "&:hover": { backgroundColor: "#E91E63" },
+                  }}
                 >
-                  Sign In
-                </Typography>
-                <FormControl fullWidth sx={{ gap: "10px" }}>
-                  <TextField
-                    label="Name"
-                    variant="outlined"
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
-                    required
-                  />
-                  <TextField
-                    label="Email"
-                    variant="outlined"
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    required
-                  />
-                  {error && <Typography color="error">{error}</Typography>}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ width: "100%" }}
-                  >
-                    {loading ? "Logging in..." : "Login"}
-                  </Button>
-                </FormControl>
-              </Box>
-            </motion.div>
-          </Box>
+                  {loading ? "Logging in..." : "Login"}
+                </Button>
+              </FormControl>
+            </Box>
+          </motion.div>
         </Box>
-        <Box sx={{ width: "100%", backgroundColor: "gray" }}>
-          <Footer />
-        </Box>
+      </Box>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          textAlign: "center",
+          zIndex: 1000,
+        }}
+      >
+        <Footer />
       </Box>
     </>
   );

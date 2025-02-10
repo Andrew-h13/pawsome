@@ -20,13 +20,32 @@ export default function Home() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "100vh",
+          minHeight: loggedIn ? "0" : "100vh",
+          overflow: "auto",
         }}
       >
         <Navbar />
         <Splash />
         {loggedIn && <DogList />}
-        <Box sx={{ flex: 1 }} /> <Footer />
+        {!loggedIn ? (
+          <Box
+            sx={{
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              textAlign: "center",
+              zIndex: 1000,
+            }}
+          >
+            <Footer />
+          </Box>
+        ) : (
+          <>
+            <Box sx={{ flex: 1 }} />
+            <Footer />
+          </>
+        )}
       </Box>
     </>
   );

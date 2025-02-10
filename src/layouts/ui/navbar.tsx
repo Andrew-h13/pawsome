@@ -35,22 +35,28 @@ export default function Navbar() {
   const handleContact = () => router.push("/contact");
 
   const handleLogout = async () => {
-    const success = await logoutUser();
-
-    if (success && typeof window !== "undefined") {
-      Cookies.remove("loggedIn");
-      Cookies.remove("UserName");
-      Cookies.remove("favorites");
-      setLoggedIn(false);
-      router.push("/login");
-    } else {
-      console.log("Logout failed");
+    try {
+      const success = await logoutUser();
+      if (success && typeof window !== "undefined") {
+        Cookies.remove("loggedIn", { path: "/" });
+        Cookies.remove("UserName", { path: "/" });
+        Cookies.remove("favorites", { path: "/" });
+        setLoggedIn(false);
+        router.push("/login");
+      } else {
+        console.error("Logout failed: Unable to log out user.");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
     }
   };
 
   return (
     <Box
       sx={{
+        position: "fixed",
+        top: 0,
+        zIndex: 1000,
         width: "100vw",
         height: "64px",
         display: "flex",
@@ -60,6 +66,7 @@ export default function Navbar() {
         padding: "0 2rem",
         boxSizing: "border-box",
         borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
       }}
     >
       {isMobile ? (
