@@ -92,7 +92,6 @@ export default function DogProfile() {
             padding: isMobile ? "1rem" : "2rem",
           }}
         >
-          {/* Back Button */}
           <Link href="/" passHref>
             <IconButton sx={{ color: "#FF4081", mb: 2 }}>
               <ArrowBackIcon />
@@ -103,7 +102,6 @@ export default function DogProfile() {
           </Link>
 
           <Grid2 container spacing={3}>
-            {/* Dog Image Section */}
             <Grid2 size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
@@ -127,7 +125,6 @@ export default function DogProfile() {
               </Box>
             </Grid2>
 
-            {/* Dog Details Section */}
             <Grid2 size={{ xs: 12, md: 6 }}>
               <Paper
                 sx={{
@@ -139,7 +136,6 @@ export default function DogProfile() {
                 }}
               >
                 <Stack spacing={3}>
-                  {/* Name and Breed */}
                   <Box>
                     <Typography
                       variant="h2"
@@ -157,7 +153,6 @@ export default function DogProfile() {
                     </Typography>
                   </Box>
 
-                  {/* Age and Location */}
                   <Box>
                     <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
                       <Box
@@ -195,7 +190,6 @@ export default function DogProfile() {
                     </Stack>
                   </Box>
 
-                  {/* Location Details */}
                   <Box>
                     <Typography variant="h5" sx={{ mb: 2, color: "#FF4081" }}>
                       <LocationOnIcon sx={{ verticalAlign: "middle", mr: 1 }} />
@@ -225,7 +219,7 @@ export default function DogProfile() {
                             variant="body2"
                             sx={{ color: "#999999", mt: 1 }}
                           >
-                            Coordinates: {location.latitude},{" "}
+                            Coordinates: {location.latitude},
                             {location.longitude}
                           </Typography>
                         </Box>

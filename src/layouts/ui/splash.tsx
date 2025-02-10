@@ -86,7 +86,17 @@ export default function Splash() {
           >
             {!isLoggedIn ? (
               <>
-                <h4 style={{ width: "90vw", transform: "translate(-5%, 0%)" }}>
+                <h4
+                  style={{
+                    width: "90vw",
+                    transform: "translate(-5%, 0%)",
+                    color: "#fff",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
+                    padding: "1rem",
+                    borderRadius: "10px",
+                    textAlign: "center",
+                  }}
+                >
                   Find Your Purrrfect Match and Unleash the Love
                 </h4>
                 <Box
@@ -94,7 +104,12 @@ export default function Splash() {
                     marginTop: 2,
                     fontSize: { xs: "1rem", sm: "1.1rem" },
                     fontWeight: "normal",
-                    Width: "100vw",
+                    width: "100vw",
+                    color: "#fff",
+                    textShadow: "1px 1px 3px rgba(0, 0, 0, 0.6)",
+                    padding: "1rem",
+                    borderRadius: "10px",
+                    textAlign: "center",
                     transform: "translate(0%, 0%)",
                   }}
                 >
@@ -108,7 +123,6 @@ export default function Splash() {
                       backgroundColor: "#2d2d2d",
                       marginTop: 3,
                       padding: "12px 24px",
-                      transform: "translate(0%,0%)",
                       fontSize: "1.1rem",
                       textTransform: "none",
                       borderRadius: "20px",
@@ -127,6 +141,10 @@ export default function Splash() {
                   transform: isMobile
                     ? "translate(-5%, 100%)"
                     : "translate(-10%, 100%)",
+                  color: "#fff",
+                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
+                  borderRadius: "10px",
+                  textAlign: "center",
                 }}
               >
                 Welcome back, {userName}! Let’s find your purrrfect match!

@@ -21,8 +21,14 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { Dog } from "@/models/types";
-import { getBreeds, getDogs, searchDog, searchLocations } from "@/utils/api";
+import { Dog, Location } from "@/models/types";
+import {
+  fetchLocations,
+  getBreeds,
+  getDogs,
+  searchDog,
+  searchLocations,
+} from "@/utils/api";
 import PetsIcon from "@mui/icons-material/Pets";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -37,6 +43,7 @@ interface Field {
 
 export default function DogList() {
   const [dogs, setDogs] = useState<Dog[]>([]);
+  const [location, setLocation] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageSize, setPageSize] = useState(25);
   const [sortField, setSortField] = useState<"breed" | "name" | "age">("breed");
@@ -218,21 +225,22 @@ export default function DogList() {
   ]);
 
   const fields: Field[] = [
-    {
-      placeholder: "Zipcode",
-      onChange: (value: string) => setZipCode(value),
-      width: "150px",
-    },
+    // Cant get city or State to be sorted
     {
       placeholder: "City",
       onChange: (value: string) => setCity(value),
-      width: "150px",
+      width: "0px",
     },
     {
       placeholder: "State",
       onChange: (value: string) =>
         setStates(value.split(",").map((s) => s.trim())),
-      width: "200px",
+      width: "0px",
+    },
+    {
+      placeholder: "Zipcode",
+      onChange: (value: string) => setZipCode(value),
+      width: "150px",
     },
   ];
 
@@ -253,6 +261,22 @@ export default function DogList() {
     setFavoriteDogs(updatedFavorites);
     Cookies.set("favorites", JSON.stringify(updatedFavorites), { expires: 30 });
   };
+
+  useEffect(() => {
+    if (dogs.length === 0 || !dogs[0].zip_code) return;
+
+    const fetchLocationData = async () => {
+      try {
+        const zipCodes = [dogs[0].zip_code];
+        const locationData = await fetchLocations(zipCodes);
+        setLocation(locationData);
+      } catch (error) {
+        console.error("Failed to fetch location data:", error);
+      }
+    };
+
+    fetchLocationData();
+  }, [dogs]);
 
   return (
     <>
@@ -352,11 +376,11 @@ export default function DogList() {
           }}
         >
           <Stack
-            spacing={2}
+            spacing={3}
             direction={isMobile ? "column" : "row"}
             sx={{
               width: "100%",
-              maxWidth: isMobile ? "90%" : "600px",
+              maxWidth: isMobile ? "90%" : "100vw",
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -378,16 +402,13 @@ export default function DogList() {
                   marginTop: "10px",
                 }}
               >
-                <PetsIcon
-                  sx={{ fontSize: "24px", color: "rgba(255, 255, 255, 0.2)" }}
-                />
                 <Input
                   placeholder={field.placeholder}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     field.onChange(e.target.value)
                   }
                   sx={{
-                    marginLeft: "0.75rem",
+                    marginLeft: "1rem",
                     flex: 1,
                     color: "#ccc",
                     "& .MuiInputBase-root": {
@@ -397,31 +418,29 @@ export default function DogList() {
                 />
               </Box>
             ))}
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-            <Box>
-              <InputLabel sx={{ color: "white" }}>Min Age</InputLabel>
-              <input
-                type="number"
-                placeholder="Min Age"
-                value={minAge}
-                onChange={(e) => setMinAge(e.target.value)}
-                style={{ padding: "8px", width: "100px" }}
-              />
-            </Box>
-            <Box>
-              <InputLabel sx={{ color: "white" }}>Max Age</InputLabel>
-              <input
-                type="number"
-                placeholder="Max Age"
-                value={maxAge}
-                onChange={(e) => setMaxAge(e.target.value)}
-                style={{ padding: "8px", width: "100px" }}
-              />
-            </Box>
-          </Stack>
-          <Grid2 size={{ xs: 12, md: 6 }}>
+            <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+              <Box>
+                <InputLabel sx={{ color: "white" }}></InputLabel>
+                <input
+                  type="number"
+                  placeholder="Min Age"
+                  value={minAge}
+                  onChange={(e) => setMinAge(e.target.value)}
+                  style={{ padding: "8px", width: "100px" }}
+                />
+              </Box>
+              <Box>
+                <InputLabel sx={{ color: "white" }}></InputLabel>
+                <input
+                  type="number"
+                  placeholder="Max Age"
+                  value={maxAge}
+                  onChange={(e) => setMaxAge(e.target.value)}
+                  style={{ padding: "8px", width: "100px" }}
+                />
+              </Box>
+            </Stack>
             <Stack
               direction="row"
               spacing={2}
@@ -494,7 +513,7 @@ export default function DogList() {
                 </Select>
               </FormControl>
             </Stack>
-          </Grid2>
+          </Stack>
         </Grid2>
       </Box>
       <Box
@@ -539,27 +558,71 @@ export default function DogList() {
                         }}
                       />
                       <CardContent>
-                        <Typography
-                          variant="h6"
-                          sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}
+                        <Box
+                          sx={{
+                            backgroundColor: "#444444",
+                            borderRadius: "8px",
+                            padding: "1rem",
+                            mb: 2,
+                          }}
                         >
-                          {dog.name}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ marginBottom: "0.5rem" }}
-                        >
-                          {dog.breed}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ marginBottom: "0.5rem", fontSize: "0.9rem" }}
-                        >
-                          {dog.age} years old
-                        </Typography>
-                        <Typography variant="body2" sx={{ fontSize: "0.9rem" }}>
-                          Location: {dog.zip_code}
-                        </Typography>
+                          <Typography
+                            variant="h5"
+                            sx={{
+                              fontWeight: "bold",
+                              color: "#FF4081",
+                            }}
+                          >
+                            {dog.name}
+                          </Typography>
+
+                          <Typography variant="body2" sx={{ color: "#cccccc" }}>
+                            {dog.breed}
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: "#cccccc" }}>
+                            {dog.age} years old
+                          </Typography>
+                          {location.length > 0 ? (
+                            location.map((location, index) => (
+                              <Box key={index}>
+                                <Typography
+                                  variant="body1"
+                                  sx={{ fontWeight: "bold", marginTop: "10px" }}
+                                >
+                                  {location.city}, {location.state}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  sx={{ color: "#cccccc" }}
+                                >
+                                  {location.county} County | ZIP:{" "}
+                                  {location.zip_code}
+                                </Typography>
+                              </Box>
+                            ))
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              sx={{ fontStyle: "italic" }}
+                            >
+                              Location information not available
+                            </Typography>
+                          )}
+                        </Box>
+                        <Box>
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              transform: "translate(20%, 10%)",
+                              fontWeight: "bold",
+                              "&:hover": {
+                                color: "#FF4081",
+                              },
+                            }}
+                          >
+                            Click to learn more!
+                          </Typography>
+                        </Box>
                       </CardContent>
                     </Link>
 
@@ -579,9 +642,18 @@ export default function DogList() {
                           e.stopPropagation();
                           toggleFavorite(dog.id);
                         }}
+                        sx={{
+                          "&:hover": {
+                            color: "#FF4081",
+                          },
+                        }}
                       >
                         {favoriteDogs.includes(dog.id) ? (
-                          <FavoriteIcon sx={{ color: "red" }} />
+                          <FavoriteIcon
+                            sx={{
+                              color: "red",
+                            }}
+                          />
                         ) : (
                           <FavoriteBorderIcon sx={{ color: "white" }} />
                         )}

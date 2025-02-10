@@ -13,7 +13,7 @@ export default function Footer() {
       <Stack spacing={1}>
         <Typography variant="body2">© 2025 PawsomeMatch</Typography>
 
-        <Grid2 container justifyContent="center" spacing={3}>
+        <Grid2 container justifyContent="center" spacing={1}>
           <Grid2>
             <Link
               href="/contact"

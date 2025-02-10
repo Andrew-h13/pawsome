@@ -31,8 +31,8 @@ export default function Login() {
     setError(null);
     const success = await loginUser(name, email);
     if (success) {
-      Cookies.set("loggedIn", "true", { expires: 1 });
-      Cookies.set("UserName", name, { expires: 1 });
+      Cookies.set("loggedIn", "true", { expires: 1 / 24 });
+      Cookies.set("UserName", name, { expires: 1 / 24 });
       router.push("/");
     } else {
       setError("Login Failed, Please Check your Credentials");
@@ -131,7 +131,7 @@ export default function Login() {
               </Typography>
               <FormControl fullWidth sx={{ gap: "10px" }}>
                 <TextField
-                  label="Name"
+                  label="Your Name"
                   variant="outlined"
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -152,7 +152,7 @@ export default function Login() {
                     "&:hover": { backgroundColor: "#E91E63" },
                   }}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading ? "Logging in..." : "Get Started"}
                 </Button>
               </FormControl>
             </Box>
@@ -165,6 +165,7 @@ export default function Login() {
           bottom: 0,
           left: 0,
           width: "100%",
+          padding: "1rem",
           textAlign: "center",
           zIndex: 1000,
         }}
