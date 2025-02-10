@@ -110,7 +110,7 @@ export default function Splash() {
                     padding: "1rem",
                     borderRadius: "10px",
                     textAlign: "center",
-                    transform: "translate(0%, 0%)",
+                    transform: "translate(-10%, 0%)",
                   }}
                 >
                   Explore our database of shelter dogs to discover your new best

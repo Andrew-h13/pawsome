@@ -225,7 +225,7 @@ export default function DogList() {
   ]);
 
   const fields: Field[] = [
-    // Cant get city or State to be sorted
+    // Cant get city or State to be sorted shows on mobile
     {
       placeholder: "City",
       onChange: (value: string) => setCity(value),
@@ -625,7 +625,6 @@ export default function DogList() {
                         </Box>
                       </CardContent>
                     </Link>
-
                     <Box
                       sx={{
                         position: "absolute",

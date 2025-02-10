@@ -1,6 +1,6 @@
 import Footer from "@/layouts/ui/footer";
 import Navbar from "@/layouts/ui/navbar";
-import { Box, Typography, Stack, Grid2 } from "@mui/material";
+import { Box, Typography, Stack, Grid2, Container } from "@mui/material";
 
 export default function Contact() {
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -8,36 +8,37 @@ export default function Contact() {
 
   return (
     <>
+      <Navbar />
+
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
+          background: "linear-gradient(to bottom, #222, #111)",
+          color: "#ddd",
         }}
       >
-        <Navbar />
-
-        <Box
+        <Container
           sx={{
-            padding: { xs: "2rem", md: "3rem" },
             flex: 1,
-            backgroundColor: "#111",
+            padding: { xs: "1.5rem 1rem", md: "3rem 2rem" },
+            backgroundColor: "rgba(0, 0, 0, 0.85)",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             borderRadius: "8px",
-            marginTop: "2rem",
-            marginLeft: "auto",
-            marginRight: "auto",
-            maxWidth: { xs: "90vw", md: "800px", lg: "1200px" },
+            margin: { xs: "1.5rem auto", md: "2rem auto" },
+            maxWidth: { xs: "95%", md: "800px", lg: "1200px" },
           }}
         >
           <Typography
             variant="h4"
             sx={{
+              marginTop: "30px",
               marginBottom: "2rem",
               fontWeight: "bold",
-              color: "#fff",
+              color: "#FF4081",
               textAlign: "center",
-              fontSize: { xs: "1.8rem", md: "2.5rem" },
+              fontSize: { xs: "2rem", md: "2.5rem" },
             }}
           >
             Contact Us
@@ -45,29 +46,29 @@ export default function Contact() {
 
           <Grid2 container spacing={4}>
             <Grid2 size={{ xs: 12, md: 6 }}>
-              <Stack spacing={2}>
+              <Stack spacing={3}>
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: "bold", color: "#fff" }}
+                  sx={{ fontWeight: "bold", color: "#FF4081" }}
                 >
-                  Get in Touch:
+                  Get in Touch
                 </Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
+                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
                   Should you have any inquiries or require assistance, please
                   feel free to reach out to us at:
                 </Typography>
                 <Typography
                   variant="body1"
-                  sx={{ fontWeight: "bold", color: "#fff" }}
+                  sx={{ fontWeight: "bold", color: "#FF4081" }}
                 >
                   contact@pawsomematch.com
                 </Typography>
 
-                <Typography variant="body1" sx={{ color: "#fff" }}>
+                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
                   If you are considering adopting a pet, we encourage you to
                   explore Three Little Pitties Rescue for more information.
                 </Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
+                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
                   Visit their website:{" "}
                   <a
                     href="https://www.threelittlepittiesrescue.org/"
@@ -88,9 +89,9 @@ export default function Contact() {
             <Grid2 size={{ xs: 12, md: 6 }}>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: "bold", color: "#fff" }}
+                sx={{ fontWeight: "bold", color: "#FF4081", mb: 2 }}
               >
-                Three Little Pitties Rescue Location:
+                Three Little Pitties Rescue Location
               </Typography>
               <Box
                 sx={{
@@ -113,7 +114,7 @@ export default function Contact() {
               </Box>
             </Grid2>
           </Grid2>
-        </Box>
+        </Container>
 
         <Footer />
       </Box>

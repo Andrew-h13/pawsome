@@ -236,19 +236,26 @@ export default function DogProfile() {
           </Grid2>
         </Box>
       </Box>
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          padding: "1rem",
-          textAlign: "center",
-          zIndex: 1000,
-        }}
-      >
-        <Footer />
-      </Box>
+      {!isMobile ? (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            padding: "1rem",
+            textAlign: "center",
+            zIndex: 1000,
+          }}
+        >
+          <Footer />
+        </Box>
+      ) : (
+        <>
+          <Box sx={{ flex: 1 }} />
+          <Footer />
+        </>
+      )}
     </>
   );
 }
