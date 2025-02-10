@@ -164,8 +164,7 @@ export default function Login() {
           position: "fixed",
           bottom: 0,
           left: 0,
-          width: "100%",
-          padding: "1rem",
+          width: "100vw",
           textAlign: "center",
           zIndex: 1000,
         }}

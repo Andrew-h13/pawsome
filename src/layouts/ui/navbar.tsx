@@ -84,9 +84,11 @@ export default function Navbar() {
           }}
         />
       ) : (
-        <h1 onClick={handleHome} style={{ cursor: "pointer" }}>
-          PawsomeMatch
-        </h1>
+        <>
+          <h1 onClick={handleHome} style={{ cursor: "pointer" }}>
+            PawsomeMatch
+          </h1>
+        </>
       )}
 
       <Grid2

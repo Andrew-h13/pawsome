@@ -10,21 +10,22 @@ export default function Privacy() {
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
+          background: "linear-gradient(to bottom, #222, #111)",
+          color: "#ddd",
         }}
       >
         <Navbar />
 
         <Container
           sx={{
-            padding: "4rem 2rem",
             flex: 1,
-            backgroundColor: "#111",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            borderRadius: "10px",
-            maxWidth: "1200px",
-            marginTop: "3rem",
-            marginLeft: "auto",
-            marginRight: "auto",
+            padding: { xs: "1.5rem 1rem", md: "4rem 2rem" },
+            backgroundColor: "rgba(0, 0, 0, 0.85)",
+            boxShadow: "0 6px 20px rgba(0, 0, 0, 0.3)",
+            borderRadius: "12px",
+            maxWidth: { xs: "100%", sm: "90%", md: "800px", lg: "1000px" },
+            margin: { xs: "2rem auto", md: "3rem auto" },
+            textAlign: "center",
           }}
         >
           <Typography
