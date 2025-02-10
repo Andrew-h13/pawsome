@@ -39,7 +39,7 @@ export default function DogList() {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageSize, setPageSize] = useState(25);
-  const [sortField, setSortField] = useState<"breed" | "name" | "age">("name");
+  const [sortField, setSortField] = useState<"breed" | "name" | "age">("breed");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const [breedSearch, setBreedSearch] = useState("");
