@@ -46,7 +46,7 @@ export default function Splash() {
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+        <Box sx={{ position: "relative", width: "100%", minHeight: "80vh" }}>
           <Image
             src="/assets/test2.jpg"
             alt="hero"
@@ -64,16 +64,12 @@ export default function Splash() {
               zIndex: 1,
             }}
           />
-
           <Box
             sx={{
               position: "absolute",
               top: "50%",
               left: "50%",
-
-              transform: isMobile
-                ? "translate(-50%, 10%)"
-                : "translate(-50%, 50%)",
+              transform: "translate(-50%, -50%)",
               textAlign: "center",
               color: "white",
               fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" },
@@ -82,14 +78,17 @@ export default function Splash() {
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)",
               zIndex: 2,
               padding: { xs: "10px", sm: "20px" },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             {!isLoggedIn ? (
               <>
                 <h4
                   style={{
-                    width: isMobile ? "90vw" : "100vw",
-                    transform: "translate(-5%, 0%)",
+                    width: "100%",
                     color: "#fff",
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                     padding: "1rem",
@@ -104,15 +103,12 @@ export default function Splash() {
                     marginTop: 2,
                     fontSize: { xs: "1rem", sm: "1.1rem" },
                     fontWeight: "normal",
-                    width: "100vw",
+                    width: "100%",
                     color: "#fff",
                     textShadow: "1px 1px 3px rgba(0, 0, 0, 0.6)",
                     padding: "1rem",
                     borderRadius: "10px",
                     textAlign: "center",
-                    transform: isMobile
-                      ? "translate(-10%, 0%)"
-                      : "translate(-5%, 0%)",
                   }}
                 >
                   Explore our database of shelter dogs to discover your new best
@@ -138,11 +134,8 @@ export default function Splash() {
             ) : (
               <h4
                 style={{
-                  width: isMobile ? "40vh" : "100vh",
+                  width: "100%",
                   padding: "1rem",
-                  transform: isMobile
-                    ? "translate(-5%, 100%)"
-                    : "translate(-5%, 100%)",
                   color: "#fff",
                   textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
                   borderRadius: "10px",
